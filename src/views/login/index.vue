@@ -5,15 +5,15 @@
       <h1>登录</h1>
       <el-card shadow="never" class="login-card">
         <!--登录表单-->
-        <el-form>
-          <el-form-item>
-            <el-input placeholder="请输入手机号" />
+        <el-form ref="form" :rules="loginRules" :model="loginForm">
+          <el-form-item prop="mobile">
+            <el-input v-model="loginForm.mobile" placeholder="请输入手机号" />
           </el-form-item>
-          <el-form-item>
-            <el-input placeholder="请输入密码" type="password" />
+          <el-form-item prop="password">
+            <el-input v-model="loginForm.password" placeholder="请输入密码" type="password" show-password />
           </el-form-item>
-          <el-form-item>
-            <el-checkbox label="用户平台使用协议" value="用户平台使用协议" />
+          <el-form-item prop="isAgree">
+            <el-checkbox v-model="loginForm.isAgree" label="用户平台使用协议" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" style="width: 350px;" @click="onLogin">登录</el-button>
@@ -26,7 +26,52 @@
 </template>
 <script>
 export default {
-  name: 'Login'
+  name: 'Login',
+  data() {
+    return {
+      loginForm: {
+        mobile: '',
+        password: '',
+        isAgree: false
+      },
+      loginRules: {
+        mobile: [
+          {
+            // required只能检测 null undefined ""
+            required: true,
+            message: '请输入手机号',
+            trigger: 'blur' },
+          {
+            // 正则表达式验证手机号
+            pattern: /^1[3-9]\d{9}$/,
+            message: '请正确输入手机号',
+            trigger: 'blur'
+          }],
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' }, { min: 6, max: 20, message: '密码长度在 6 到 20 个字符', trigger: 'blur' }],
+        isAgree: [
+          {
+            // 自定义校验规则
+            validator: (rule, value, callback) => {
+              value ? callback() : callback(new Error('请勾选用户平台使用协议'))
+            }
+          }
+        ]
+      }
+    }
+  },
+  methods: {
+    onLogin() {
+      // 所有校验规则通过之后执行
+      // validate()自动检测表单的校验是否全都通过,全通过会返回true，反之返回false
+      this.$refs.form.validate((isOK) => {
+        if (isOK) {
+          alert('表单校验成功')
+        } else {
+          alert('表单校验失败')
+        }
+      })
+    }
+  }
 }
 </script>
 <style lang="scss">
