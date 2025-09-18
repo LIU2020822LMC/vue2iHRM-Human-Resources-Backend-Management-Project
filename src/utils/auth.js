@@ -1,6 +1,6 @@
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie' // 前端缓存数据的库
 
-const TokenKey = 'vue_admin_template_token'
+const TokenKey = 'vue_admin_token' // cookie键的名字
 
 export function getToken() {
   return Cookies.get(TokenKey)
