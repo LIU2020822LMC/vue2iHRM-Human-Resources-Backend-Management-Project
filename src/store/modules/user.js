@@ -21,10 +21,10 @@ const mutations = {
 
 const actions = {
   // context上下文，传递参数
-  login(context, data) {
+  async login(context, data) {
     console.log(data)
     // 调用登录接口
-    context.commit('setToken', 125463)
+    context.commit('setToken', 123456)
     console.log(state.token)
   }
 }

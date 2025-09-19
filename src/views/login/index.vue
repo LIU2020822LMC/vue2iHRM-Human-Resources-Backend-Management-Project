@@ -18,14 +18,12 @@
           <el-form-item>
             <el-button type="primary" style="width: 350px;" @click="onLogin">登录</el-button>
           </el-form-item>
-          <el-button @click="test">测试接口</el-button>
         </el-form>
       </el-card>
     </div>
   </div>
 </template>
 <script>
-import Axios from 'axios'
 
 export default {
   name: 'Login',
@@ -62,20 +60,6 @@ export default {
     }
   },
   methods: {
-    test() {
-      Axios({
-        // url: 'https://heimahr.itheima.net/api/sys/login',
-        // 这个请求最终转变成http://localhost:9580/api/sys/login，由于我们在vue.config.js的设置，
-        // 所以http://localhost:9580/api/sys/login会向https://heimahr.itheima.net/api/sys/login发送请求获取数据，这样子就解决了跨域问题
-        // 因为我们发送的请求都是http://localhost:9580/这样子的同端口同请求协议同域名，然后vue.config.js的设置帮我们代理，也就是向我们真正的请求地址发送请求获取数据
-        url: '/api/sys/login',
-        method: 'post',
-        data: {
-          mobile: '13426719242',
-          password: 123456
-        }
-      })
-    },
     onLogin() {
       // 所有校验规则通过之后执行
       // validate()自动检测表单的校验是否全都通过,全通过会返回true，反之返回false

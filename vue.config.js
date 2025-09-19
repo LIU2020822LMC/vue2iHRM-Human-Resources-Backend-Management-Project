@@ -31,23 +31,17 @@ module.exports = {
   productionSourceMap: false,
   devServer: {
     port: port,
-    open: true,
+    open: true, // 自动打开浏览器
     overlay: {
       warnings: false,
       errors: true
     },
-
     proxy: {
-      // 这个代码的意思是：当你发送请求的url发现有/api这个东西（如/api/sys/login），前端就会自动向https://heimahr.itheima.net/这个服务器发送请求
-      //   'api': {
-      //     target: 'https://heimahr.itheima.net/'
-      //   }
-      // }
-      api: {
-        target: 'https://heimahr.itheima.net/'
+      '/api': {
+        target: 'https://heimahr.itheima.net'
+        // changeOrigin: true // 允许跨域（关键配置）
       }
     }
-
     // 基础模板做的模拟数据 拦截请求
     // before: require('./mock/mock-server.js')
   },
