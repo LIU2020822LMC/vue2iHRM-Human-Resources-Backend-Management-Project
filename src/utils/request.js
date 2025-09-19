@@ -26,6 +26,7 @@ request.interceptors.request.use((config) => {
 // 响应拦截器(里面有两个函数，成功执行第一个函数，失败执行第二个函数)
 request.interceptors.response.use((res) => {
   const { success, data, message } = res.data
+  // 如果success是true的话，返回data，其他地方调用接口函数就可以获取data里面的东西
   if (success) {
     return data
   } else {
