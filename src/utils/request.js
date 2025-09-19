@@ -4,7 +4,10 @@ import { Message } from 'element-ui'
 
 // 创建一个新的axios实例
 const request = axios.create({
-  baseURL: '/api', // 基础地址(完整地址在vue.config.js配置)
+  // 这样子的请求地址设置的作用是：
+  // 当环境是开发环境的时候就去请求.env.development文件里面设置的VUE_APP_BASE_API
+  // 当环境是生产环境的时候就去请求.env.production文件里面设置的VUE_APP_BASE_API
+  baseURL: process.env.VUE_APP_BASE_API, // 基础地址(完整地址在vue.config.js配置)
   timeout: 10000 // 超时时间
 })
 
