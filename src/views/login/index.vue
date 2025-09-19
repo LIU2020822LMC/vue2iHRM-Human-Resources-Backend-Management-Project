@@ -30,9 +30,9 @@ export default {
   data() {
     return {
       loginForm: {
-        mobile: '',
+        mobile: process.env.NODE_ENV === 'development' ? '13800000002' : '',
         password: '',
-        isAgree: false
+        isAgree: process.env.NODE_ENV === 'development'
       },
       loginRules: {
         mobile: [
@@ -59,13 +59,29 @@ export default {
       }
     }
   },
+  created() {
+    if (process.env.NODE_ENV === 'development') {
+      // 如果是开发环境的话密码就自动变成itHeiMa@20250919这样子格式的密码填充到表单上，后面八位数字随着日期而变化
+      this.loginForm.password = `itHeiMa@${this.getFormattedDate()}`
+    }
+  },
   methods: {
+    // 获取 YYYYMMDD 格式的日期（默认当前时间）(为了获取20250919这样子格式文本拼接密码而创建)
+    getFormattedDate(date = new Date()) {
+      const year = date.getFullYear() // 获取年份（4位数字）
+      const month = String(date.getMonth() + 1).padStart(2, '0') // 月份（0-11，需+1），不足2位补0
+      const day = String(date.getDate()).padStart(2, '0') // 日期（1-31），不足2位补0
+      return year + month + day // 拼接成 20250919 格式
+    },
     onLogin() {
       // 所有校验规则通过之后执行
       // validate()自动检测表单的校验是否全都通过,全通过会返回true，反之返回false
-      this.$refs.form.validate((isOK) => {
+      this.$refs.form.validate(async(isOK) => {
         if (isOK) {
-          this.$store.dispatch('user/login', this.loginForm)
+          // 判断Vuex中的user.js里面调用login接口是否成功，如果成功就跳转到主页，加await是为了达到成功才跳转，不成功就不跳转
+          await this.$store.dispatch('user/login', this.loginForm)
+          // 跳转主页
+          this.$router.push('/')
         } else {
           alert('表单校验失败')
         }
