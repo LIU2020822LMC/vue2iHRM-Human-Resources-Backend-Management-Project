@@ -1,68 +1,39 @@
-// 此文件主要负责路由导航守卫
+import router from '@/router'
+// 引入进度条与相关样式
+import nprogress from 'nprogress'
+import 'nprogress/nprogress.css'
+import store from './store/index'
 
-import router from './router'
-import store from './store'
-import { Message } from 'element-ui'
-import NProgress from 'nprogress' // progress bar
-import 'nprogress/nprogress.css' // progress bar style
-import { getToken } from '@/utils/auth' // get token from cookie
-import getPageTitle from '@/utils/get-page-title'
+// 建立白名单存放路由
+const whileList = ['/login', '/404']
 
-NProgress.configure({ showSpinner: false }) // NProgress Configuration
-
-const whiteList = ['/login'] // no redirect whitelist
-
-// 路由前置守卫
-router.beforeEach(async(to, from, next) => {
-  // start progress bar
-  NProgress.start()
-
-  // set page title
-  document.title = getPageTitle(to.meta.title)
-
-  // determine whether the user has logged in
-  const hasToken = getToken()
-
-  if (hasToken) {
+// 前置守卫(路由跳转之前触发的操作)
+router.beforeEach((to, from, next) => {
+  // 开启进度条(只要开始跳转，就立刻显示进度条)
+  nprogress.start()
+  // 判断有无token情况下的做法
+  if (store.getters.token) {
+    // 有token如果去登录页的话直接跳转到主页
     if (to.path === '/login') {
-      // if is logged in, redirect to the home page
-      next({ path: '/' })
-      NProgress.done()
+      next('/') // next(path)里面有path的话并没有执行后置守卫，所以需要手动调用结束进度条
+      nprogress.done()
     } else {
-      const hasGetUserInfo = store.getters.name
-      if (hasGetUserInfo) {
-        next()
-      } else {
-        try {
-          // get user info
-          await store.dispatch('user/getInfo')
-
-          next()
-        } catch (error) {
-          // remove token and go to login page to re-login
-          await store.dispatch('user/resetToken')
-          Message.error(error || 'Has Error')
-          next(`/login?redirect=${to.path}`)
-          NProgress.done()
-        }
-      }
+      next()
     }
   } else {
-    /* has no token*/
-
-    if (whiteList.indexOf(to.path) !== -1) {
-      // in the free login whitelist, go directly
+    if (whileList.includes(to.path)) {
+      // 如果没有token，要去的路由在白名单的话就直接放行
       next()
     } else {
-      // other pages that do not have permission to access are redirected to the login page.
-      next(`/login?redirect=${to.path}`)
-      NProgress.done()
+      // 如果没有token，且不在白名单的话就返回登录页
+      next('/login')
+      nprogress.done() // 手动结束执行进度条
     }
   }
 })
 
-// 路由后置守卫
+// 后置守卫(路由跳转完成后触发的操作)
 router.afterEach(() => {
-  // finish progress bar
-  NProgress.done()
+  // 结束进度条(触发时机：目标页面（比如首页）的 DOM 渲染完成、资源（如图片、接口数据）加载完毕后。)
+  nprogress.done()
 })
