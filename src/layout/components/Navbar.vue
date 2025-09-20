@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/max-attributes-per-line -->
 <template>
   <div class="navbar">
     <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
@@ -19,10 +20,8 @@
               首页
             </el-dropdown-item>
           </router-link>
-          <a
-            target="_blank"
-            href="https://github.com/LIU2020822LMC/vue2iHRM-Human-Resources-Backend-Management-Project.git"
-          >
+          <a target="_blank"
+            href="https://github.com/LIU2020822LMC/vue2iHRM-Human-Resources-Backend-Management-Project.git">
             <el-dropdown-item>项目地址</el-dropdown-item>
           </a>
           <!--prevent阻止默认事件 阻止 <a> 标签的默认跳转行为（包括通过 target="_blank" 在新标签页打开的行为） -->
@@ -41,8 +40,24 @@
 
       <!-- 放置弹窗 -->
       <!-- sync-可以接受子组件传过来的事件和值 -->
-      <el-dialog title="修改密码" :visible.sync="dialogTableVisible" width="500px" center>
+      <!-- :mask="false-关闭遮罩层，页面不再变暗-->
+      <el-dialog title="修改密码" :visible.sync="dialogTableVisible" width="500px" center :mask="false" append-to-body>
         <!-- 放置表单 -->
+        <el-form label-width="120px">
+          <el-form-item label="旧密码">
+            <el-input show-password size="small" />
+          </el-form-item>
+          <el-form-item label="新密码">
+            <el-input show-password size="small" />
+          </el-form-item>
+          <el-form-item label="确认密码">
+            <el-input show-password size="small" />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" size="small">确认修改</el-button>
+            <el-button size="small">取消</el-button>
+          </el-form-item>
+        </el-form>
       </el-dialog>
     </div>
   </div>
@@ -92,7 +107,7 @@ export default {
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
 
   .hamburger-container {
     line-height: 46px;
@@ -100,7 +115,7 @@ export default {
     float: left;
     cursor: pointer;
     transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover {
       background: rgba(0, 0, 0, .025)
@@ -146,11 +161,13 @@ export default {
         // position: relative;
         display: flex;
         align-items: center;
+
         .name {
           // 用户名称距离右侧距离
           margin-right: 10px;
           font-size: 16px;
         }
+
         .username {
           width: 30px;
           height: 30px;
@@ -161,16 +178,19 @@ export default {
           border-radius: 50%;
           margin-right: 5px;
         }
+
         .user-avatar {
           cursor: pointer;
           width: 30px;
           height: 30px;
-          margin-right:5px;
+          margin-right: 5px;
           border-radius: 50%;
         }
+
         .el-icon-setting {
           font-size: 20px;
         }
+
         .el-icon-caret-bottom {
           cursor: pointer;
           position: absolute;
