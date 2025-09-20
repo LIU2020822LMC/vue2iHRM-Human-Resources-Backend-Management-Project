@@ -7,7 +7,9 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar" class="user-avatar">
+          <img v-if="avatar" :src="avatar" class="user-avatar">
+          <!-- charAt(0)获取字符串的第一个字符 -->
+          <span v-else class="username">{{ name?.charAt(0) }}</span>
           <span class="name">{{ name }}</span>
           <i class="el-icon-setting" />
         </div>
@@ -126,6 +128,16 @@ export default {
           // 用户名称距离右侧距离
           margin-right: 10px;
           font-size: 16px;
+        }
+        .username {
+          width: 30px;
+          height: 30px;
+          line-height: 30px;
+          text-align: center;
+          background-color: #04c9be;
+          color: #fff;
+          border-radius: 50%;
+          margin-right: 5px;
         }
         .user-avatar {
           cursor: pointer;
