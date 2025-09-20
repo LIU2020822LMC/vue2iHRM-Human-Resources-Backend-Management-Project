@@ -1,6 +1,7 @@
 import axios from 'axios'
 import store from '../store/index.js'
 import { Message } from 'element-ui'
+import router from '@/router/index.js'
 
 // 创建一个新的axios实例
 const request = axios.create({
@@ -34,9 +35,17 @@ request.interceptors.response.use((res) => {
     return Promise.reject(new Error(message))
   }
 },
-(err) => {
+async(err) => {
   // 失败执行promise
-  Message({ type: 'error', message: err.message })
+  if (err.response.status === 401) {
+    Message({ type: 'warning', message: '登录超时，请重新登录' })
+    // 说明token超时了,需要删除缓存的token与vuex相关的用户信息，调用vuex中的user模块中的action中的logout方法
+    await store.dispatch('user/logout')
+    // 清除完之后跳转登录页
+    router.push('/login')
+    return Promise.reject(err) // 结束语句，不再往下面走
+  }
+  Message({ type: 'error', message: err.response.data.message })
   return Promise.reject(err)
 })
 export default request

@@ -8,7 +8,7 @@
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img v-if="avatar" :src="avatar" class="user-avatar">
-          <!-- charAt(0)获取字符串的第一个字符 -->
+          <!-- charAt(0)获取字符串的第一个字符 如果用户头像为空取名字的第一个字符作为头像-->
           <span v-else class="username">{{ name?.charAt(0) }}</span>
           <span class="name">{{ name }}</span>
           <i class="el-icon-setting" />
