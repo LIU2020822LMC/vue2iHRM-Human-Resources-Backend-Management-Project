@@ -37,7 +37,7 @@ request.interceptors.response.use((res) => {
 },
 async(err) => {
   // 失败执行promise
-  if (err.response.status === 401) {
+  if (err.response.status >= 400 && err.response.status <= 500) {
     Message({ type: 'warning', message: '登录超时，请重新登录' })
     // 说明token超时了,需要删除缓存的token与vuex相关的用户信息，调用vuex中的user模块中的action中的logout方法
     await store.dispatch('user/logout')
