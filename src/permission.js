@@ -8,7 +8,7 @@ import store from './store/index'
 const whileList = ['/login', '/404']
 
 // 前置守卫(路由跳转之前触发的操作)
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   // 开启进度条(只要开始跳转，就立刻显示进度条)
   nprogress.start()
   // 判断有无token情况下的做法
@@ -18,7 +18,13 @@ router.beforeEach((to, from, next) => {
       next('/') // next(path)里面有path的话并没有执行后置守卫，所以需要手动调用结束进度条
       nprogress.done()
     } else {
-      next()
+      // 判断是否获取过资料
+      if (!store.getters.userId) {
+        // 如果检测出没有userId的话那就请求获取用户信息接口，将信息获取到并存到vuex中
+        await store.dispatch('user/getUserInfo')
+      }
+
+      next() // 直接放行
     }
   } else {
     if (whileList.includes(to.path)) {
