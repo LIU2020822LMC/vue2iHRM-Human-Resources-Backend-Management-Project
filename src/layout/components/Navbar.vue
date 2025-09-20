@@ -25,7 +25,8 @@
           >
             <el-dropdown-item>项目地址</el-dropdown-item>
           </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
+          <!--prevent阻止默认事件 阻止 <a> 标签的默认跳转行为（包括通过 target="_blank" 在新标签页打开的行为） -->
+          <a target="_blank" @click.prevent="updatePassword">
             <el-dropdown-item>修改密码</el-dropdown-item>
           </a>
           <!-- native事件修饰符 -->
@@ -37,6 +38,12 @@
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
+
+      <!-- 放置弹窗 -->
+      <!-- sync-可以接受子组件传过来的事件和值 -->
+      <el-dialog title="修改密码" :visible.sync="dialogTableVisible" width="500px" center>
+        <!-- 放置表单 -->
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -51,6 +58,11 @@ export default {
     Breadcrumb,
     Hamburger
   },
+  data() {
+    return {
+      dialogTableVisible: false
+    }
+  },
   computed: {
     // 引入头像与用户名
     ...mapGetters([
@@ -60,6 +72,9 @@ export default {
     ])
   },
   methods: {
+    updatePassword() {
+      this.dialogTableVisible = true
+    },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
