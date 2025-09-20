@@ -7,13 +7,14 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
+          <img :src="avatar" class="user-avatar">
+          <span class="name">{{ name }}</span>
+          <i class="el-icon-setting" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
             <el-dropdown-item>
-              Home
+              首页
             </el-dropdown-item>
           </router-link>
           <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
@@ -42,9 +43,11 @@ export default {
     Hamburger
   },
   computed: {
+    // 引入头像与用户名
     ...mapGetters([
       'sidebar',
-      'avatar'
+      'avatar',
+      'name'
     ])
   },
   methods: {
@@ -116,15 +119,24 @@ export default {
 
       .avatar-wrapper {
         margin-top: 5px;
-        position: relative;
-
+        // position: relative;
+        display: flex;
+        align-items: center;
+        .name {
+          // 用户名称距离右侧距离
+          margin-right: 10px;
+          font-size: 16px;
+        }
         .user-avatar {
           cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
+          width: 30px;
+          height: 30px;
+          margin-right:5px;
+          border-radius: 50%;
         }
-
+        .el-icon-setting {
+          font-size: 20px;
+        }
         .el-icon-caret-bottom {
           cursor: pointer;
           position: absolute;
