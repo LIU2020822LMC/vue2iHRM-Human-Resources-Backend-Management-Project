@@ -43,19 +43,19 @@
       <!-- :mask="false-关闭遮罩层，页面不再变暗-->
       <el-dialog title="修改密码" :visible.sync="dialogTableVisible" width="500px" center :mask="false" append-to-body>
         <!-- 放置表单 -->
-        <el-form label-width="120px">
-          <el-form-item label="旧密码">
-            <el-input show-password size="small" />
+        <el-form ref="passWordForm" label-width="120px" :rules="rules" :model="passWordForm">
+          <el-form-item label="旧密码" prop="oldPassword">
+            <el-input v-model="passWordForm.oldPassword" show-password size="small" />
           </el-form-item>
-          <el-form-item label="新密码">
-            <el-input show-password size="small" />
+          <el-form-item label="新密码" prop="newPassword">
+            <el-input v-model="passWordForm.newPassword" show-password size="small" />
           </el-form-item>
-          <el-form-item label="确认密码">
-            <el-input show-password size="small" />
+          <el-form-item label="确认新密码" prop="confirmPassWord">
+            <el-input v-model="passWordForm.confirmPassWord" show-password size="small" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" size="small">确认修改</el-button>
-            <el-button size="small">取消</el-button>
+            <el-button size="small" @click="dialogTableVisible=false">取消</el-button>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -75,7 +75,41 @@ export default {
   },
   data() {
     return {
-      dialogTableVisible: false
+      dialogTableVisible: false,
+      passWordForm: {
+        oldPassword: '',
+        newPassword: '',
+        confirmPassWord: ''
+      },
+      rules: {
+        oldPassword: [
+          { required: true, message: '原密码不能为空', trigger: 'blur' }
+        ],
+        newPassword: [
+          { required: true, message: '新密码不能为空', trigger: 'blur' },
+          { trigger: 'blur',
+            validator: (rules, value, callback) => {
+              if (this.passWordForm.oldPassword === value) {
+                callback(new Error('新旧密码不能一样'))
+                return
+              }
+              callback()
+            }
+          }
+        ],
+        confirmPassWord: [
+          { required: true, message: '确认新密码不能为空', trigger: 'blur' },
+          { trigger: 'blur',
+            validator: (rules, value, callback) => {
+              if (this.passWordForm.newPassword !== value) {
+                callback(new Error('两次输入的密码不一致'))
+                return
+              }
+              callback()
+            }
+          }
+        ]
+      }
     }
   },
   computed: {
