@@ -21,7 +21,8 @@
             </el-dropdown-item>
           </router-link>
           <a target="_blank"
-            href="https://github.com/LIU2020822LMC/vue2iHRM-Human-Resources-Backend-Management-Project.git">
+             href="https://github.com/LIU2020822LMC/vue2iHRM-Human-Resources-Backend-Management-Project.git"
+          >
             <el-dropdown-item>项目地址</el-dropdown-item>
           </a>
           <!--prevent阻止默认事件 阻止 <a> 标签的默认跳转行为（包括通过 target="_blank" 在新标签页打开的行为） -->
@@ -41,7 +42,7 @@
       <!-- 放置弹窗 -->
       <!-- sync-可以接受子组件传过来的事件和值 -->
       <!-- :mask="false-关闭遮罩层，页面不再变暗-->
-      <el-dialog title="修改密码" :visible.sync="dialogTableVisible" width="500px" center :mask="false" append-to-body>
+      <el-dialog title="修改密码" :visible.sync="dialogTableVisible" width="500px" center :mask="false" append-to-body @close="CancelBtn">
         <!-- 放置表单 -->
         <el-form ref="passWordForm" label-width="120px" :rules="rules" :model="passWordForm">
           <el-form-item label="旧密码" prop="oldPassword">
@@ -54,8 +55,8 @@
             <el-input v-model="passWordForm.confirmPassWord" show-password size="small" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small">确认修改</el-button>
-            <el-button size="small" @click="dialogTableVisible=false">取消</el-button>
+            <el-button type="primary" size="small" @click="OKbtn">确认修改</el-button>
+            <el-button size="small" @click="CancelBtn">取消</el-button>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -67,8 +68,10 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import { updateUserPassword } from '@/api/user.js'
 
 export default {
+
   components: {
     Breadcrumb,
     Hamburger
@@ -130,6 +133,19 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push('/login')
+    },
+    OKbtn() {
+      this.$refs.passWordForm.validate(async(isOK) => {
+        if (isOK) {
+          await updateUserPassword(this.passWordForm)
+          this.CancelBtn()
+          this.$message.success('修改密码成功')
+        }
+      })
+    },
+    CancelBtn() {
+      this.$refs.passWordForm.resetFields() // 重置表单
+      this.dialogTableVisible = false
     }
   }
 }
