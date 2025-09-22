@@ -30,6 +30,7 @@ export default {
     ...mapGetters([
       'sidebar'
     ]),
+    // 从路由文件里引入所有路由
     routes() {
       return this.$router.options.routes
     },

@@ -43,6 +43,7 @@ export const constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
+    // 隐藏路由不让在左侧显示
     hidden: true
   },
 
@@ -50,6 +51,7 @@ export const constantRoutes = [
   {
     path: '/404',
     component: () => import('@/views/404'),
+    // 隐藏路由不让在左侧显示
     hidden: true
   },
 
@@ -96,11 +98,13 @@ export const constantRoutes = [
   { path: '*', redirect: '/404', hidden: true }
 ]
 
-const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
-})
+const createRouter = () =>
+  new Router({
+    // 自动将新页面的滚动位置重置到顶部（y 轴坐标为 0 的位置）
+    // 让用户每次进入新页面都从顶部开始浏览
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes
+  })
 
 const router = createRouter()
 
