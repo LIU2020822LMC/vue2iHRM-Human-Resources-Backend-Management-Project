@@ -4,22 +4,26 @@
       <!-- 展示树形结构 -->
       <el-tree :data="depts" :props="defaultProps" default-expand-all>
         <!-- 节点结构 -->
-        <el-row style="width: 100%;height: 40px;" type="flex" justify="space-between" align="middle">
-          <el-col>传智教育</el-col>
-          <el-col :span="4">
-            <span class="tree-manager">管理员</span>
-            <el-dropdown>
-              <span class="el-dropdown-link">
-                操作<i class="el-icon-arrow-down el-icon--right" />
-              </span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>添加子部门</el-dropdown-item>
-                <el-dropdown-item>编辑部门</el-dropdown-item>
-                <el-dropdown-item>删除</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </el-col>
-        </el-row>
+        <template v-slot="{data}">
+          <el-row style="width: 100%;height: 40px;" type="flex" justify="space-between" align="middle">
+            <el-col>{{ data.name }}</el-col>
+            <el-col :span="4">
+              <span class="tree-manager">{{ data.ManagerName }}</span>
+              <el-dropdown>
+                <!-- 显示区域内容 -->
+                <span class="el-dropdown-link">
+                  操作<i class="el-icon-arrow-down el-icon--right" />
+                </span>
+                <!-- 下拉菜单选项 -->
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item>添加子部门</el-dropdown-item>
+                  <el-dropdown-item>编辑部门</el-dropdown-item>
+                  <el-dropdown-item>删除</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </el-col>
+          </el-row>
+        </template>
       </el-tree>
     </div>
   </div>
@@ -32,11 +36,13 @@ export default {
       depts: [
         {
           name: '传智教育',
+          ManagerName: '张三',
           children: [
-            { name: '总裁办' },
-            { name: '行政部' },
+            { name: '总裁办', ManagerName: '李四' },
+            { name: '行政部', ManagerName: '王五' },
             {
               name: '人事部',
+              ManagerName: '小梅',
               children: [{
                 name: '财务核算部'
               },
