@@ -6,6 +6,7 @@
       <div :class="{'fixed-header':fixedHeader}">
         <navbar />
       </div>
+      <!-- 二级路由渲染位置 -->
       <app-main />
     </div>
   </div>
