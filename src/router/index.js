@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import department from './department/department'
 
 Vue.use(Router)
 
@@ -56,7 +57,7 @@ export const constantRoutes = [
       }
     ]
   },
-
+  department,
   // 如果访问的路径不是我们所规定的话，那就去访问404页面
   { path: '*', redirect: '/404', hidden: true }
 ]
