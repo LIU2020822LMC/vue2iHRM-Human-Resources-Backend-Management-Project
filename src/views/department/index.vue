@@ -2,23 +2,23 @@
   <div class="container">
     <div class="app-container">
       <!-- 展示树形结构 -->
-      <el-tree :data="depts" :props="defaultProps" default-expand-all>
+      <el-tree :data="depts" :props="defaultProps" default-expand-all :expand-on-click-node="false">
         <!-- 节点结构 -->
         <template v-slot="{ data }">
           <el-row style="width: 100%;height: 40px;" type="flex" justify="space-between" align="middle">
             <el-col>{{ data.name }}</el-col>
             <el-col :span="4">
               <span class="tree-manager">{{ data.managerName }}</span>
-              <el-dropdown>
+              <el-dropdown @command="operateDept">
                 <!-- 显示区域内容 -->
                 <span class="el-dropdown-link">
                   操作<i class="el-icon-arrow-down el-icon--right" />
                 </span>
                 <!-- 下拉菜单选项 -->
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>添加子部门</el-dropdown-item>
-                  <el-dropdown-item>编辑部门</el-dropdown-item>
-                  <el-dropdown-item>删除</el-dropdown-item>
+                  <el-dropdown-item command="add">添加子部门</el-dropdown-item>
+                  <el-dropdown-item command="edit">编辑部门</el-dropdown-item>
+                  <el-dropdown-item command="detele">删除</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </el-col>
@@ -26,16 +26,25 @@
         </template>
       </el-tree>
     </div>
+
+    <!-- 放置弹窗 -->
+    <AddDept :show-dialog-visible="showDialogVisible" @close="closeDialogVisible" />
   </div>
 </template>
 <script>
 import { getDepartment } from '@/api/department'
 import { transListToTreeData } from '@/utils/index.js'
+import AddDept from './components/add-dept.vue'
 
 export default {
   name: 'Department',
+  // 注册组件
+  components: {
+    AddDept
+  },
   data() {
     return {
+      showDialogVisible: false,
       depts: [],
       defaultProps: {
         children: 'children',
@@ -51,6 +60,18 @@ export default {
       const res = await getDepartment()
       const result = transListToTreeData(res, 0)
       this.depts = result
+    },
+
+    // 操作部门方法
+    operateDept(type) {
+      if (type === 'add') {
+        this.showDialogVisible = true
+      }
+    },
+
+    // 弹窗叉号关闭方法
+    closeDialogVisible() {
+      this.showDialogVisible = false
     }
   }
 
