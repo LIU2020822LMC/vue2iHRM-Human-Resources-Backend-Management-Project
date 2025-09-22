@@ -1,8 +1,13 @@
 <template>
+  <!-- 判断index.vue组件传过来的每一条路由是否设置隐藏，不是的话就继续往下面执行 -->
   <div v-if="!item.hidden">
+    <!-- 判断是否有子路由 -->
     <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
+      <!-- 判断是否有meta -->
       <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
         <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
+          <!-- 读取了meta中的icon和title -->
+          <!-- 渲染icon与title -->
           <item :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)" :title="onlyOneChild.meta.title" />
         </el-menu-item>
       </app-link>
@@ -36,7 +41,7 @@ export default {
   components: { Item, AppLink },
   mixins: [FixiOSBug],
   props: {
-    // route object
+    // 路由相关对象
     item: {
       type: Object,
       required: true
