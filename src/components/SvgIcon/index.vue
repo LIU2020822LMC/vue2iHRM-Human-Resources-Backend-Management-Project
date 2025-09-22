@@ -25,6 +25,7 @@ export default {
     isExternal() {
       return isExternal(this.iconClass)
     },
+    // 将图标名称转换为SVG引用
     iconName() {
       return `#icon-${this.iconClass}`
     },

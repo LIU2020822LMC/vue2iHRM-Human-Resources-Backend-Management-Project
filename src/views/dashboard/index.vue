@@ -2,8 +2,6 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">name: {{ name }}</div>
-    <div>{{ this.$store.state.user.UserInfo.staffPhoto }}</div>
-    <div>{{ this.$store.state.user.UserInfo.userId }}</div>
   </div>
 </template>
 

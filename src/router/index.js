@@ -1,6 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import department from './department/department'
+import departmentRouter from './modules/department'
+import approvalRouter from './modules/approval'
+import attendanceRouter from './modules/attendance'
+import employeeRouter from './modules/employee'
+import permissionRouter from './modules/permission'
+import roleRouter from './modules/role'
+import salaryRouter from './modules/salary'
+import socialRouter from './modules/social'
 
 Vue.use(Router)
 
@@ -32,18 +39,21 @@ import Layout from '@/layout'
  * all roles can be accessed
  */
 export const constantRoutes = [
+  // 登录路由
   {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
   },
 
+  // 404路由
   {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
   },
 
+  // 首页路由
   {
     path: '/',
     component: Layout,
@@ -57,7 +67,31 @@ export const constantRoutes = [
       }
     ]
   },
-  department,
+
+  // 组织架构路由
+  departmentRouter,
+
+  // 审批管理路由
+  approvalRouter,
+
+  // 考勤管理路由
+  attendanceRouter,
+
+  // 员工管理路由
+  employeeRouter,
+
+  // 权限管理路由
+  permissionRouter,
+
+  // 角色管理路由
+  roleRouter,
+
+  // 工资管理路由
+  salaryRouter,
+
+  // 社保管理路由
+  socialRouter,
+
   // 如果访问的路径不是我们所规定的话，那就去访问404页面
   { path: '*', redirect: '/404', hidden: true }
 ]
