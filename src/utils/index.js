@@ -115,3 +115,21 @@ export function param2Obj(url) {
   })
   return obj
 }
+
+/**
+ *
+ *  列表型数据转化树形函数
+ */
+
+export function transListToTreeData(list, parentNode) {
+  const arr = []
+  list.forEach(item => {
+    // 判断每个item的pid是否等于别的item的id，如果是的话，那就说明，这个item是别的item的子项目
+    if (item.pid === parentNode) {
+      arr.push(item) // 存储节点
+      const children = transListToTreeData(list, item.id) // 继续寻找子节点
+      item.children = children // 增加item的children属性
+    }
+  })
+  return arr // 每层递归结束的返回值
+}
