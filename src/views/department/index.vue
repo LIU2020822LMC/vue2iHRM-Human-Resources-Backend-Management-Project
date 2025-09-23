@@ -9,7 +9,8 @@
             <el-col>{{ data.name }}</el-col>
             <el-col :span="4">
               <span class="tree-manager">{{ data.managerName }}</span>
-              <el-dropdown @command="operateDept">
+              <!-- $event 实参 表示类型 -->
+              <el-dropdown @command="operateDept($event,data.id)">
                 <!-- 显示区域内容 -->
                 <span class="el-dropdown-link">
                   操作<i class="el-icon-arrow-down el-icon--right" />
@@ -28,7 +29,7 @@
     </div>
 
     <!-- 放置弹窗 -->
-    <AddDept :show-dialog-visible="showDialogVisible" @close="closeDialogVisible" />
+    <AddDept :current-node-id="currentNodeId" :show-dialog-visible="showDialogVisible" @close="closeDialogVisible" />
   </div>
 </template>
 <script>
@@ -45,6 +46,7 @@ export default {
   data() {
     return {
       showDialogVisible: false,
+      currentNodeId: null,
       depts: [],
       defaultProps: {
         children: 'children',
@@ -63,9 +65,10 @@ export default {
     },
 
     // 操作部门方法
-    operateDept(type) {
+    operateDept(type, id) {
       if (type === 'add') {
         this.showDialogVisible = true
+        this.currentNodeId = id
       }
     },
 

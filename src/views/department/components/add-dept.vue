@@ -38,6 +38,10 @@ export default {
     showDialogVisible: {
       type: Boolean,
       default: false
+    },
+    currentNodeId: {
+      type: Number,
+      default: null
     }
   },
   data() {
@@ -90,9 +94,13 @@ export default {
     this.GetManagerList()
   },
   methods: {
+
+    // 新增部门叉号关闭传递父组件数据事件
     close() {
       this.$emit('close', false)
     },
+
+    // 获取负责人下拉列表数据
     async GetManagerList() {
       const res = await getManagerList()
       this.ManagerList = res
