@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import { getDepartment } from '@/api/department.js'
+
 export default {
   name: 'AddDept',
   props: {
@@ -47,14 +49,36 @@ export default {
       },
       rules: {
         code: [{ required: true, message: '部门编码不能为空', trigger: 'blur' },
-          { min: 2, max: 10, message: '长度在2到10个字符', trigger: 'blur' }
+          { min: 2, max: 10, message: '长度在2到10个字符', trigger: 'blur' },
+          {
+            trigger: 'blur',
+            validator: async(rule, value, callback) => {
+              const res = await getDepartment()
+              if (res.some(item => item.code === value)) {
+                callback(new Error('部门编码已存在'))
+              } else {
+                callback() // 验证通过
+              }
+            }
+          }
         ], // 部门编码
         introduce: [{ required: true, message: '部门介绍不能为空', trigger: 'blur' },
           { min: 1, max: 100, message: '长度在1到100个字符', trigger: 'blur' }
         ], // 部门介绍
         managerId: [{ required: true, message: '请选择一个部门负责人', trigger: 'change' }], // 部门负责人名字
         name: [{ required: true, message: '部门名称不能为空', trigger: 'blur' },
-          { min: 2, max: 10, message: '长度在2到10个字符', trigger: 'blur' }
+          { min: 2, max: 10, message: '长度在2到10个字符', trigger: 'blur' },
+          {
+            trigger: 'blur',
+            validator: async(rule, value, callback) => {
+              const res = await getDepartment()
+              if (res.some(item => item.name === value)) {
+                callback(new Error('部门名称已存在'))
+              } else {
+                callback() // 验证通过
+              }
+            }
+          }
         ] // 部门名称
       }
     }
