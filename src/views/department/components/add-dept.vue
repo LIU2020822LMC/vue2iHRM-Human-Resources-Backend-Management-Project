@@ -61,7 +61,11 @@ export default {
           {
             trigger: 'blur',
             validator: async(rule, value, callback) => {
-              const res = await getDepartment()
+              let res = await getDepartment()
+              // 用addForm是否拥有id来判断是编辑模式还是新增模式，有的话就是编辑模式
+              if (this.addForm.id) {
+                res = res.filter(item => item.id !== this.addForm.id)
+              }
               if (res.some(item => item.code === value)) {
                 callback(new Error('部门编码已存在'))
               } else {
@@ -79,7 +83,11 @@ export default {
           {
             trigger: 'blur',
             validator: async(rule, value, callback) => {
-              const res = await getDepartment()
+              let res = await getDepartment()
+              // 用addForm是否拥有id来判断是编辑模式还是新增模式，有的话就是编辑模式
+              if (this.addForm.id) {
+                res = res.filter(item => item.id !== this.addForm.id)
+              }
               if (res.some(item => item.name === value)) {
                 callback(new Error('部门名称已存在'))
               } else {
