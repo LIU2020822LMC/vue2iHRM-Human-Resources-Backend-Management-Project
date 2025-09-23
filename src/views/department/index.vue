@@ -10,7 +10,7 @@
             <el-col :span="4">
               <span class="tree-manager">{{ data.managerName }}</span>
               <!-- $event 实参 表示类型 -->
-              <el-dropdown @command="operateDept($event,data.id)">
+              <el-dropdown @command="operateDept($event, data.id)">
                 <!-- 显示区域内容 -->
                 <span class="el-dropdown-link">
                   操作<i class="el-icon-arrow-down el-icon--right" />
@@ -39,7 +39,7 @@
   </div>
 </template>
 <script>
-import { getDepartment } from '@/api/department'
+import { getDepartment, deleteDepartment } from '@/api/department'
 import { transListToTreeData } from '@/utils/index.js'
 import AddDept from './components/add-dept.vue'
 
@@ -73,15 +73,27 @@ export default {
     // 操作部门方法
     operateDept(type, id) {
       if (type === 'add') {
+        // 新增子部门
         this.showDialogVisible = true
         this.currentNodeId = id
       } else if (type === 'edit') {
+        // 编辑部门
         this.showDialogVisible = true
         this.currentNodeId = id
         // this.$nextTick()的作用是等上面父组件的currentNodeId传到子组件之后才执行括号里面的内容
         this.$nextTick(() => {
           // 父组件调用子组件的方法来获取数据，this.$refs.addDept等同于子组件的this
           this.$refs.addDept.GetDepartmentDetail()
+        })
+      } else {
+        // 删除部门
+        this.$confirm('你确定要永久删除此部门吗？', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        }).then(async() => {
+          await deleteDepartment(id)
+          this.$message.success('删除成功')
+          this.getDepartment()
         })
       }
     },
@@ -96,15 +108,16 @@ export default {
 </script>
 
 <style scoped>
-  .app-container{
-    padding: 30px 140px;
-    font-size: 14px;
-  }
-  .tree-manager{
-    width: 50px;
-    /*让元素既保持 ** inline 元素的同行特性 **（不独占一行，可与其他元素并排），又具备 ** block 元素的尺寸可控特性 **（可设置宽高、垂直方向的 margin/padding 等）。 */
-    /* inline-block 解决了 "既想让元素并排显示，又想精确控制其盒模型" 的需求。 */
-    display: inline-block;
-    margin-right: 40px;
-  }
+.app-container {
+  padding: 30px 140px;
+  font-size: 14px;
+}
+
+.tree-manager {
+  width: 50px;
+  /*让元素既保持 ** inline 元素的同行特性 **（不独占一行，可与其他元素并排），又具备 ** block 元素的尺寸可控特性 **（可设置宽高、垂直方向的 margin/padding 等）。 */
+  /* inline-block 解决了 "既想让元素并排显示，又想精确控制其盒模型" 的需求。 */
+  display: inline-block;
+  margin-right: 40px;
+}
 </style>
