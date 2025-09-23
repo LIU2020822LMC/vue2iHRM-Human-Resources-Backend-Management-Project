@@ -29,7 +29,7 @@
     </div>
 
     <!-- 放置弹窗 -->
-    <AddDept :current-node-id="currentNodeId" :show-dialog-visible="showDialogVisible" @close="closeDialogVisible" />
+    <AddDept :current-node-id="currentNodeId" :show-dialog-visible="showDialogVisible" @updateDepartment="getDepartment" @close="closeDialogVisible" />
   </div>
 </template>
 <script>
