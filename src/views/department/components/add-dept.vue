@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { getDepartment, getManagerList, addDepartment } from '@/api/department.js'
+import { getDepartment, getManagerList, addDepartment, getDepartmentDetail } from '@/api/department.js'
 
 export default {
   name: 'AddDept',
@@ -119,6 +119,12 @@ export default {
           this.close()
         }
       })
+    },
+
+    // 获取部门详情
+    async GetDepartmentDetail() {
+      const res = await getDepartmentDetail(this.currentNodeId)
+      this.addForm = res
     }
   }
 }
