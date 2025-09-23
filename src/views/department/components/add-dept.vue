@@ -9,6 +9,7 @@
         <el-input v-model="addForm.code" placeholder="2-10个字符" style="width: 80%;" />
       </el-form-item>
       <el-form-item label="部门负责人" prop="managerId">
+        <!-- 选择器双向绑定的是el-option中的value，即:value="item.id" -->
         <el-select v-model="addForm.managerId" placeholder="请选择负责人" style="width: 80%;">
           <el-option v-for="item in ManagerList" :key="item.id" :label="item.username" :value="item.id" />
         </el-select>
@@ -20,7 +21,7 @@
         <el-row type="flex" justify="center">
           <el-col :span="12">
             <el-button type="primary" @click="onSubmit">确定</el-button>
-            <el-button>取消</el-button>
+            <el-button @click="close">取消</el-button>
           </el-col>
         </el-row>
 
@@ -30,7 +31,7 @@
 </template>
 
 <script>
-import { getDepartment, getManagerList } from '@/api/department.js'
+import { getDepartment, getManagerList, addDepartment } from '@/api/department.js'
 
 export default {
   name: 'AddDept',
@@ -97,6 +98,7 @@ export default {
 
     // 新增部门叉号关闭传递父组件数据事件
     close() {
+      this.$refs.addDept.resetFields() // 重置表单
       this.$emit('close', false)
     },
 
@@ -104,6 +106,19 @@ export default {
     async GetManagerList() {
       const res = await getManagerList()
       this.ManagerList = res
+    },
+
+    // 新增部门确定按钮
+    onSubmit() {
+      // 判断全部校验是否通过
+      this.$refs.addDept.validate(async(isOK) => {
+        if (isOK) {
+          await addDepartment({ ...this.addForm, pid: this.currentNodeId })
+          this.$message.success('新增部门成功')
+          this.$emit('updateDepartment')
+          this.close()
+        }
+      })
     }
   }
 }

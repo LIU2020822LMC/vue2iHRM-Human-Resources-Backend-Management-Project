@@ -18,3 +18,13 @@ export const getManagerList = () => {
     url: '/sys/user/simple'
   })
 }
+
+// 新增部门接口
+
+export const addDepartment = (data) => {
+  return request({
+    url: '/company/department',
+    method: 'POST',
+    data
+  })
+}
