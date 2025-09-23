@@ -3,16 +3,16 @@
     <!-- 放置表单 -->
     <el-form label-width="120px">
       <el-form-item label="部门名称">
-        <el-input style="width: 80%;" />
+        <el-input placeholder="2-10个字符" style="width: 80%;" />
       </el-form-item>
       <el-form-item label="部门编码">
-        <el-input style="width: 80%;" />
+        <el-input placeholder="2-10个字符" style="width: 80%;" />
       </el-form-item>
       <el-form-item label="部门负责人">
-        <el-select style="width: 80%;" />
+        <el-select placeholder="请选择负责人" style="width: 80%;" />
       </el-form-item>
       <el-form-item label="部门介绍">
-        <el-input type="textarea" :rows="5" style="width: 80%;" />
+        <el-input placeholder="1-100个字符" type="textarea" :rows="5" style="width: 80%;" />
       </el-form-item>
       <el-form-item>
         <el-row type="flex" justify="center">
