@@ -39,7 +39,6 @@ const actions = {
   async getUserInfo(context) {
     const res = await getUserInfo()
     context.commit('setUserInfo', res)
-    console.log(res)
   },
 
   // 清除token与vuex中用户信息的方法

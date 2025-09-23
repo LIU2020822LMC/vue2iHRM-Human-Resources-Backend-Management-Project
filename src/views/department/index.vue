@@ -29,7 +29,13 @@
     </div>
 
     <!-- 放置弹窗 -->
-    <AddDept :current-node-id="currentNodeId" :show-dialog-visible="showDialogVisible" @updateDepartment="getDepartment" @close="closeDialogVisible" />
+    <AddDept
+      ref="addDept"
+      :current-node-id="currentNodeId"
+      :show-dialog-visible="showDialogVisible"
+      @updateDepartment="getDepartment"
+      @close="closeDialogVisible"
+    />
   </div>
 </template>
 <script>
@@ -69,6 +75,14 @@ export default {
       if (type === 'add') {
         this.showDialogVisible = true
         this.currentNodeId = id
+      } else if (type === 'edit') {
+        this.showDialogVisible = true
+        this.currentNodeId = id
+        // this.$nextTick()的作用是等上面父组件的currentNodeId传到子组件之后才执行括号里面的内容
+        this.$nextTick(() => {
+          // 父组件调用子组件的方法来获取数据，this.$refs.addDept等同于子组件的this
+          this.$refs.addDept.GetDepartmentDetail()
+        })
       }
     },
 
