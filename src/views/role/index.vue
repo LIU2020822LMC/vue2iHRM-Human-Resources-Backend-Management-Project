@@ -7,10 +7,10 @@
       </div>
 
       <!-- 放置表格 -->
-      <el-table>
-        <el-table-column label="角色" width="200" align="center" />
-        <el-table-column label="启用" width="200" align="center" />
-        <el-table-column label="描述" align="center" />
+      <el-table :data="roleList">
+        <el-table-column label="角色" width="200" align="center" prop="name" />
+        <el-table-column label="启用" width="200" align="center" prop="state" />
+        <el-table-column label="描述" align="center" prop="description" />
         <el-table-column label="操作" align="center" />
       </el-table>
 
@@ -25,9 +25,26 @@
   </div>
 </template>
 <script>
+import { getRoleList } from '@/api/role'
+
 export default {
-  name: 'Role'
+  name: 'Role',
+  data() {
+    return {
+      roleList: []
+    }
+  },
+  created() {
+    this.GetRoleList()
+  },
+  methods: {
+    async GetRoleList() {
+      const { rows } = await getRoleList()
+      this.roleList = rows
+    }
+  }
 }
+
 </script>
 
 <style scoped>
