@@ -29,7 +29,13 @@
       <!-- 放置分页 -->
       <el-row type="flex" justify="end" align="middle">
         <el-column>
-          <el-pagination layout="prev, pager, next" />
+          <el-pagination
+            :page-size="pageParams.pagesize"
+            :current-page="pageParams.page"
+            layout="prev, pager, next"
+            :total="pageParams.total"
+            @current-change="CurrentPageChange"
+          />
         </el-column>
       </el-row>
 
@@ -43,7 +49,12 @@ export default {
   name: 'Role',
   data() {
     return {
-      roleList: []
+      roleList: [],
+      pageParams: {
+        page: 1,
+        pagesize: 5,
+        total: 0
+      }
     }
   },
   created() {
@@ -51,8 +62,13 @@ export default {
   },
   methods: {
     async GetRoleList() {
-      const { rows } = await getRoleList()
+      const { rows, total } = await getRoleList(this.pageParams)
       this.roleList = rows
+      this.pageParams.total = total
+    },
+    CurrentPageChange(currentPage) {
+      this.pageParams.page = currentPage
+      this.GetRoleList()
     }
   }
 }
