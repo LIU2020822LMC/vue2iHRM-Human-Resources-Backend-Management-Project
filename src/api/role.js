@@ -7,3 +7,12 @@ export const getRoleList = (params) => {
     params
   })
 }
+
+// 新增角色接口
+export const addNewRole = (data) => {
+  return request({
+    url: '/sys/role',
+    method: 'POST',
+    data
+  })
+}

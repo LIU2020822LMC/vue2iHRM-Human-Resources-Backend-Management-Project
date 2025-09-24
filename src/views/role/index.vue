@@ -41,20 +41,20 @@
 
       <!-- 放置弹窗 -->
       <!-- 通过 .sync 修饰符，当子组件内部改变 visible 状态时（比如点击关闭按钮），会自动同步更新父组件的 dialogVisible 变量 -->
-      <el-dialog :visible.sync="dialogVisible" title="新增角色" width="500px">
-        <el-form  label-width="120px">
-          <el-form-item label="角色名称">
-            <el-input style="width: 300px;" />
+      <el-dialog :visible.sync="dialogVisible" title="新增角色" width="500px" @close="CancleBtn">
+        <el-form ref="roleForm" label-width="120px" :model="roleForm" :rules="rules">
+          <el-form-item label="角色名称" prop="name">
+            <el-input v-model="roleForm.name" style="width: 300px;" />
           </el-form-item>
-          <el-form-item label="启用">
-            <el-switch />
+          <el-form-item label="启用" prop="state">
+            <el-switch v-model="roleForm.state" active-value="1" inactive-value="0" />
           </el-form-item>
-          <el-form-item label="角色描述">
-            <el-input type="textarea" :row="5" style="width: 300px;" />
+          <el-form-item label="角色描述" prop="description">
+            <el-input v-model="roleForm.description" type="textarea" :row="5" style="width: 300px;" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onSubmit">立即创建</el-button>
-            <el-button>取消</el-button>
+            <el-button type="primary" @click="OKbtn">立即创建</el-button>
+            <el-button @click="CancleBtn">取消</el-button>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -62,7 +62,7 @@
   </div>
 </template>
 <script>
-import { getRoleList } from '@/api/role'
+import { getRoleList, addNewRole } from '@/api/role'
 
 export default {
   name: 'Role',
@@ -74,7 +74,17 @@ export default {
         pagesize: 5, // 每页显示的数据数量
         total: 0 // 总数据量
       },
-      dialogVisible: false
+      dialogVisible: false,
+      roleForm: {
+        name: '',
+        description: '',
+        state: 0 // 1表示已启用，0表示未启用
+      },
+      rules: {
+        name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }],
+        state: [],
+        description: [{ required: true, message: '请输入角色描述', trigger: 'blur' }]
+      }
     }
   },
   created() {
@@ -91,6 +101,25 @@ export default {
     CurrentPageChange(currentPage) {
       this.pageParams.page = currentPage
       this.GetRoleList()
+    },
+
+    // 立即新增按钮方法
+    OKbtn() {
+      this.$refs.roleForm.validate(async(isOK) => {
+        if (isOK) {
+          await addNewRole(this.roleForm)
+          this.$message.success('新增角色成功')
+          this.CancleBtn()
+        }
+      })
+    },
+
+    // 取消按钮方法
+    CancleBtn() {
+      // 重置表单
+      this.$refs.roleForm.resetFields()
+      // 关闭弹窗
+      this.dialogVisible = false
     }
   }
 }
