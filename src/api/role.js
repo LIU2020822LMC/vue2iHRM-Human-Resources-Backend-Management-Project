@@ -25,3 +25,11 @@ export const updateRole = (data) => {
     data
   })
 }
+
+// 删除角色接口
+export const deleteRole = (id) => {
+  return request({
+    url: `/sys/role/${id}`,
+    method: 'DELETE'
+  })
+}
