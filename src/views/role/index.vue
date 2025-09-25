@@ -41,7 +41,9 @@
             <template v-else>
               <el-button type="text">分配权限</el-button>
               <el-button type="text" @click="EditRole(row)">编辑</el-button>
-              <el-button type="text">删除</el-button>
+              <el-popconfirm title="确定删除这个角色吗？" @onConfirm="confirmDel(row.id)">
+                <el-button slot="reference" type="text" style="margin-left: 10px;">删除</el-button>
+              </el-popconfirm>
             </template>
           </template>
         </el-table-column>
@@ -83,7 +85,7 @@
   </div>
 </template>
 <script>
-import { getRoleList, addNewRole, updateRole } from '@/api/role'
+import { getRoleList, addNewRole, updateRole, deleteRole } from '@/api/role'
 
 export default {
   name: 'Role',
@@ -175,6 +177,16 @@ export default {
       } else {
         this.$message.error('描述与名称不能为空')
       }
+    },
+
+    // 删除角色确定按钮方法
+    async confirmDel(id) {
+      await deleteRole(id)
+      this.$message.success('删除角色成功')
+      // 如果删除的是当前页的最后一个的话就网上翻页，即改变当前页
+      if (this.roleList.length === 1) this.pageParams.page--
+      // 重新获取角色列表渲染页面
+      this.GetRoleList()
     }
   }
 }
