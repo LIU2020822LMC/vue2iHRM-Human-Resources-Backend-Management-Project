@@ -35,8 +35,8 @@
           <template v-slot="{ row }">
             <template v-if="row.isEdit">
               <!-- 编辑状态显示 -->
-              <el-button type="primary" size="mini" @click="editOKbtn">确定</el-button>
-              <el-button size="mini" @click="editCancleBtn">取消</el-button>
+              <el-button type="primary" size="mini" @click="editOKbtn(row)">确定</el-button>
+              <el-button size="mini" @click="row.isEdit = false">取消</el-button>
             </template>
             <template v-else>
               <el-button type="text">分配权限</el-button>
@@ -83,7 +83,7 @@
   </div>
 </template>
 <script>
-import { getRoleList, addNewRole } from '@/api/role'
+import { getRoleList, addNewRole, updateRole } from '@/api/role'
 
 export default {
   name: 'Role',
@@ -145,7 +145,7 @@ export default {
       })
     },
 
-    // 取消按钮方法
+    // 新增角色取消按钮方法
     CancleBtn() {
       // 重置表单
       this.$refs.roleForm.resetFields()
@@ -160,6 +160,21 @@ export default {
       row.editRow.state = row.state
       row.editRow.description = row.description
       console.log(row.editRow)
+    },
+
+    // 编辑确定按钮
+    async editOKbtn(row) {
+      // 检查有没有填写内容
+      if (row.editRow.name && row.editRow.description) {
+        await updateRole({ ...row.editRow, id: row.id })
+        this.$message.success('更新角色成功')
+        // 将编辑的内容重新赋值给row对应的属性
+        // Object.assign 是 JavaScript 中的一个内置方法，用于对象的合并操作，
+        // 它会将一个或多个源对象的可枚举属性复制到目标对象中，并返回合并后的目标对象。
+        Object.assign(row, { isEdit: false, ...row.editRow })
+      } else {
+        this.$message.error('描述与名称不能为空')
+      }
     }
   }
 }
