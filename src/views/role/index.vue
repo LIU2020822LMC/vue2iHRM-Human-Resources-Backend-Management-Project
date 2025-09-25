@@ -11,21 +11,22 @@
         <el-table-column label="角色" width="200" align="center" prop="name">
           <template v-slot="{row}">
             <!-- 编辑状态显示 -->
-            <el-input v-if="row.isEdit" />
+            <el-input v-if="row.isEdit" v-model="row.editRow.name" />
             <span v-else>{{ row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column label="启用" width="200" align="center" prop="state">
           <template v-slot="{row}">
             <!-- 编辑状态显示 -->
-            <el-switch v-if="row.isEdit" active-value="1" inactive-value="0" />
+            <el-switch v-if="row.isEdit" v-model="row.editRow.state" :active-value="1" :inactive-value="0" />
             <!-- 获取每一行的status进行判断 -->
             <span>{{ row.state === 1 ? '已启用' : '未启用' }}</span>
           </template>
         </el-table-column>
         <el-table-column label="描述" align="center" prop="description">
           <template v-slot="{ row }">
-            <el-input v-if="row.isEdit" />
+            <!-- 编辑状态显示 -->
+            <el-input v-if="row.isEdit" v-model="row.editRow.description" />
             <span v-else>{{ row.description }}</span>
           </template>
         </el-table-column>
@@ -34,8 +35,8 @@
           <template v-slot="{ row }">
             <template v-if="row.isEdit">
               <!-- 编辑状态显示 -->
-              <el-button type="primary" size="mini" @click="OKbtn">确定</el-button>
-              <el-button size="mini" @click="CancleBtn">取消</el-button>
+              <el-button type="primary" size="mini" @click="editOKbtn">确定</el-button>
+              <el-button size="mini" @click="editCancleBtn">取消</el-button>
             </template>
             <template v-else>
               <el-button type="text">分配权限</el-button>
@@ -119,6 +120,11 @@ export default {
       this.roleList.forEach((item) => {
         // 为每个对象添加属性，下面的写法是响应式的属性
         this.$set(item, 'isEdit', false)
+        this.$set(item, 'editRow', {
+          name: item.name,
+          state: item.state,
+          description: item.description
+        })
       })
       // console.log(this.roleList)
     },
@@ -149,6 +155,11 @@ export default {
     // 编辑角色
     EditRole(row) {
       row.isEdit = true
+      // 每次点击编辑都重新获取每一个row的对应数据
+      row.editRow.name = row.name
+      row.editRow.state = row.state
+      row.editRow.description = row.description
+      console.log(row.editRow)
     }
   }
 }
