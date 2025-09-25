@@ -16,3 +16,12 @@ export const addNewRole = (data) => {
     data
   })
 }
+
+// 更新角色接口
+export const updateRole = (data) => {
+  return request({
+    url: `/sys/role/${data.id}`,
+    method: 'PUT',
+    data
+  })
+}
