@@ -27,8 +27,28 @@
           <el-button>excel导入</el-button>
           <el-button>excel导出</el-button>
         </el-row>
+
         <!-- 表格组件 -->
+        <el-table :data="tableData" style="width: 100%">
+          <el-table-column label="头像" align="center" />
+          <el-table-column label="姓名" align="center" />
+          <el-table-column label="手机号" align="center" sortable width="100px" />
+          <el-table-column label="工号" align="center" sortable />
+          <el-table-column label="聘用形式" align="center" />
+          <el-table-column label="部门" align="center" />
+          <el-table-column label="入聘时间" align="center" sortable width="120px" />
+          <el-table-column label="操作" align="center" width="180px">
+            <el-button type="text" size="mini">查看</el-button>
+            <el-button type="text" size="mini">角色</el-button>
+            <!-- slot="reference"：“slot”（插槽）是 Vue 组件的内容分发机制，reference 通常是某个弹窗 / 下拉组件（如 el-popconfirm 确认弹窗）的 “触发源插槽”—— 意味着这个按钮会作为触发弹窗的 “引用元素”（点击按钮会弹出确认框）。 -->
+            <el-button slot="reference" type="text" size="mini">删除</el-button>
+          </el-table-column>
+        </el-table>
+
         <!-- 分页 -->
+        <el-row style="height: 60px" align="middle" type="flex" justify="end">
+          <el-pagination layout="total,prev, pager, next" :total="1000" />
+        </el-row>
       </div>
     </div>
   </div>
