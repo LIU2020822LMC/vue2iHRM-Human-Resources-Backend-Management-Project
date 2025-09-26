@@ -3,11 +3,13 @@
     <div class="app-container">
       <div class="left">
         <el-input
+          v-model="queryParams.keyword"
           style="margin-bottom:10px"
           type="text"
           prefix-icon="el-icon-search"
           size="small"
           placeholder="输入员工姓名全员搜索"
+          @input="changeValue"
         />
         <!-- 树形组件 -->
         <el-tree
@@ -91,9 +93,10 @@ export default {
 
       // 存储查询参数
       queryParams: {
-        departmentId: null, // 部门id
+        departmentId: null, // 部门id,根据部门查询当前部门及子部门的用户
         page: 1, // 当前页码数
-        pagesize: 10 // 当前页面需要的数据条数
+        pagesize: 10, // 当前页面需要的数据条数
+        keyword: '' // 根据名字模糊查询
       },
 
       employeeList: [], // 员工列表数据
@@ -142,6 +145,28 @@ export default {
       // 改变页数
       this.queryParams.page = currentPage
       this.GetEmployee()
+    },
+
+    // 输入值内容改变时触发
+    changeValue() {
+      // 下面这段代码的实际效果演示：
+      // 假设用户在200ms 内连续触发了 3 次这个逻辑（比如快速输入搜索关键词）：
+      // 第 1 次触发：清除旧定时器（此时还没有旧定时器，无操作）→ 新建定时器 A（300ms 后执行）。
+      // 第 2 次触发（100ms 后）：清除定时器 A → 新建定时器 B（300ms 后执行）。
+      // 第 3 次触发（200ms 后）：清除定时器 B → 新建定时器 C（300ms 后执行）。
+      // 最终，只有定时器 C 会在 500ms 后（即第 500ms 时）执行，实现 “单位时间内只执行最后一次” 的防抖效果。
+
+      clearTimeout(this.timer) // 清理上一次的定时器
+      // this的实例上赋值了一个timer的属性
+      this.timer = setTimeout(() => {
+        // 分页查询的接口通常依赖 page 参数返回对应页的数据。当查询条件变化（如搜索关键词、筛选条件修改）时，符合条件的总数据量可能减少，
+        // 若沿用旧页码，很可能超过实际总页数，导致返回空数据。
+        // this.queryParams.page = 1 就是为了避免这种情况，确保新的查询从 “第一页” 开始，符合用户对 “新搜索结果从首页查看” 的预期。
+
+        // 设置第一页
+        this.queryParams.page = 1
+        this.GetEmployee()
+      }, 500)
     }
   }
 
