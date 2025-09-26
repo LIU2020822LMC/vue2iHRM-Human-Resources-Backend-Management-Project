@@ -30,11 +30,24 @@
 
         <!-- 表格组件 -->
         <el-table :data="employeeList" style="width: 100%">
-          <el-table-column prop="staffPhoto" label="头像" align="center" />
+          <el-table-column prop="staffPhoto" label="头像" align="center">
+            <template v-slot="{row}">
+              <!-- 头像 -->
+              <el-avatar v-if="row.staffPhoto" :size="30" :src="row.staffPhoto" />
+              <!-- 没有头像就用名字显示 -->
+              <span v-else class="username">{{ row.username.charAt(0) }}</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="username" label="姓名" align="center" />
           <el-table-column prop="mobile" label="手机号" align="center" sortable width="100px" />
           <el-table-column prop="workNumber" label="工号" align="center" sortable />
-          <el-table-column prop="formOfEmployment" label="聘用形式" align="center" />
+          <el-table-column prop="formOfEmployment" label="聘用形式" align="center">
+            <template v-slot="{row}">
+              <span v-if="row.formOfEmployment === 1">正式</span>
+              <span v-else-if="row.formOfEmployment === 2">非正式</span>
+              <span v-else>无</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="departmentName" label="部门" align="center" />
           <el-table-column prop="timeOfEntry" label="入聘时间" align="center" sortable width="120px" />
           <el-table-column label="操作" align="center" width="200px">
