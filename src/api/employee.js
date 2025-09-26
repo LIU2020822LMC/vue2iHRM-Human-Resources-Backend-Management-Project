@@ -8,11 +8,19 @@ export const getEmployee = (params) => {
   })
 }
 
-// 导出员工的excel
+// 导出员工的excel接口
 export const exportEmployee = () => {
   return request({
     url: '/sys/user/export',
     // 改变接受数据的类型
+    responseType: 'blob' // 使用blob接受二进制文件流
+  })
+}
+
+// 下载员工导入模板
+export const exportExcelTemplate = () => {
+  return request({
+    url: '/sys/user/import/template',
     responseType: 'blob' // 使用blob接受二进制文件流
   })
 }
