@@ -53,12 +53,14 @@
           <el-table-column prop="departmentName" label="部门" align="center" />
           <el-table-column prop="timeOfEntry" label="入聘时间" align="center" sortable width="120px" />
           <el-table-column label="操作" align="center" width="200px">
-            <el-button type="text" size="mini">查看</el-button>
-            <el-button type="text" size="mini">角色</el-button>
-            <!-- slot="reference"：“slot”（插槽）是 Vue 组件的内容分发机制，reference 通常是某个弹窗 / 下拉组件（如 el-popconfirm 确认弹窗）的 “触发源插槽”—— 意味着这个按钮会作为触发弹窗的 “引用元素”（点击按钮会弹出确认框）。 -->
-            <el-popconfirm title="确定删除这个员工信息吗？" style="margin-left: 10px;">
-              <el-button slot="reference" type="text" size="mini">删除</el-button>
-            </el-popconfirm>
+            <template v-slot="{row}">
+              <el-button type="text" size="mini">查看</el-button>
+              <el-button type="text" size="mini">角色</el-button>
+              <!-- slot="reference"：“slot”（插槽）是 Vue 组件的内容分发机制，reference 通常是某个弹窗 / 下拉组件（如 el-popconfirm 确认弹窗）的 “触发源插槽”—— 意味着这个按钮会作为触发弹窗的 “引用元素”（点击按钮会弹出确认框）。 -->
+              <el-popconfirm title="确定删除这个员工信息吗？" @onConfirm="confirmDel(row.id)">
+                <el-button slot="reference" type="text" style="margin-left: 10px;">删除</el-button>
+              </el-popconfirm>
+            </template>
           </el-table-column>
         </el-table>
 
@@ -82,7 +84,7 @@
 <script>
 import { getDepartment } from '@/api/department.js'
 import { transListToTreeData } from '@/utils/index.js'
-import { getEmployee, exportEmployee } from '@/api/employee'
+import { getEmployee, exportEmployee, deleteEmployee } from '@/api/employee'
 import FileSaver from 'file-saver'
 import importExcel from './components/import-excel.vue'
 
@@ -188,6 +190,16 @@ export default {
       // 使用FileSaver，直接将blob文件下载到本地
       // FileSaver.saveAs(blob对象，文件名称)
       FileSaver.saveAs(res, '员工信息表.xlsx') // 下载文件
+    },
+
+    // 删除员工确定按钮方法
+    async confirmDel(id) {
+      await deleteEmployee(id)
+      // 如果删除的是当前页的最后一个的话就网上翻页，即改变当前页
+      if (this.employeeList.length === 1 && this.queryParams.page > 1) this.queryParams.page--
+      // 重新获取角色列表渲染页面
+      this.GetEmployee()
+      this.$message.success('删除员工成功')
     }
   }
 
