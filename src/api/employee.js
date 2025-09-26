@@ -33,3 +33,11 @@ export const uploadEmployeeExcel = (data) => {
     data
   })
 }
+
+// 删除员工接口
+export const deleteEmployee = (id) => {
+  return request({
+    url: `/sys/user/${id}`,
+    method: 'DETELE'
+  })
+}
