@@ -27,7 +27,7 @@
         <el-row class="opeate-tools" type="flex" justify="end">
           <el-button type="primary">添加员工</el-button>
           <el-button>excel导入</el-button>
-          <el-button>excel导出</el-button>
+          <el-button @click="ExportEmployee">excel导出</el-button>
         </el-row>
 
         <!-- 表格组件 -->
@@ -79,7 +79,8 @@
 <script>
 import { getDepartment } from '@/api/department.js'
 import { transListToTreeData } from '@/utils/index.js'
-import { getEmployee } from '@/api/employee'
+import { getEmployee, exportEmployee } from '@/api/employee'
+import FileSaver from 'file-saver'
 
 export default {
   name: 'Employee',
@@ -123,6 +124,8 @@ export default {
       // console.log(this.queryParams.departmentId)
       this.GetEmployee()
     },
+
+    // 选择哪个部门获取的员工列表数据函数
     SelectNode(node) {
       // node参数是树形控件里面的每一个对象数据
       this.queryParams.departmentId = node.id
@@ -147,7 +150,7 @@ export default {
       this.GetEmployee()
     },
 
-    // 输入值内容改变时触发
+    // 搜索输入值内容改变时触发
     changeValue() {
       // 下面这段代码的实际效果演示：
       // 假设用户在200ms 内连续触发了 3 次这个逻辑（比如快速输入搜索关键词）：
@@ -167,6 +170,14 @@ export default {
         this.queryParams.page = 1
         this.GetEmployee()
       }, 500)
+    },
+
+    // 员工导出excel函数
+    async ExportEmployee() {
+      const res = await exportEmployee()
+      // 使用FileSaver，直接将blob文件下载到本地
+      // FileSaver.saveAs(blob对象，文件名称)
+      FileSaver.saveAs(res, '员工信息表.xlsx') // 下载文件
     }
   }
 

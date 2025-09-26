@@ -7,3 +7,12 @@ export const getEmployee = (params) => {
     params
   })
 }
+
+// 导出员工的excel
+export const exportEmployee = () => {
+  return request({
+    url: '/sys/user/export',
+    // 改变接受数据的类型
+    responseType: 'blob' // 使用blob接受二进制文件流
+  })
+}

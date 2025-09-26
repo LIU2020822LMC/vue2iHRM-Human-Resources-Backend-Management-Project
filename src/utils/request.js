@@ -9,7 +9,7 @@ const request = axios.create({
   // 当环境是开发环境的时候就去请求.env.development文件里面设置的VUE_APP_BASE_API
   // 当环境是生产环境的时候就去请求.env.production文件里面设置的VUE_APP_BASE_API
   baseURL: process.env.VUE_APP_BASE_API, // 基础地址(完整地址在vue.config.js配置)
-  timeout: 10000 // 超时时间
+  timeout: 100000 // 超时时间
 })
 
 // 请求拦截器(里面有两个函数，成功执行第一个函数，失败执行第二个函数)
@@ -26,7 +26,13 @@ request.interceptors.request.use((config) => {
 
 // 响应拦截器(里面有两个函数，成功执行第一个函数，失败执行第二个函数)
 request.interceptors.response.use((res) => {
-  const { success, data, message } = res.data
+  // 判断返回的是不是Blob
+  // Blob（Binary Large Object，二进制大对象）是浏览器原生对象，专门用于存储二进制数据（如图片、PDF、音频、Excel 文件等非文本类数据）
+  if (res.data instanceof Blob) {
+    return res.data // 返回Blob对象
+  }
+
+  const { success, data, message } = res.data // 从返回的json格式数据解构赋值
   // 如果success是true的话，返回data，其他地方调用接口函数就可以获取data里面的东西
   if (success) {
     return data
