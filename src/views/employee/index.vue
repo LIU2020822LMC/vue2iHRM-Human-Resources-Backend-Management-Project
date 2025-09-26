@@ -62,7 +62,13 @@
 
         <!-- 分页 -->
         <el-row style="height: 60px" align="middle" type="flex" justify="end">
-          <el-pagination layout="total,prev, pager, next" :total="1000" />
+          <el-pagination
+            layout="total,prev, pager, next"
+            :total="total"
+            :current-page="page"
+            :page-size="pagesize"
+            @current-change="currentChange"
+          />
         </el-row>
       </div>
     </div>
@@ -85,10 +91,14 @@ export default {
 
       // 存储查询参数
       queryParams: {
-        departmentId: null
+        departmentId: null, // 部门id
+        page: 1, // 当前页码数
+        pagesize: 10 // 当前页面需要的数据条数
       },
 
-      employeeList: []
+      employeeList: [], // 员工列表数据
+
+      total: 0 // 总页数
     }
   },
   created() {
@@ -114,14 +124,24 @@ export default {
       // node参数是树形控件里面的每一个对象数据
       this.queryParams.departmentId = node.id
       // console.log(this.queryParams.departmentId)
+      // 需要每次点击其他部门的时候回到第一页
+      this.queryParams.page = 1
       this.GetEmployee()
     },
 
     // 根据对应参数获取员工列表函数
     async GetEmployee() {
       const res = await getEmployee(this.queryParams)
-      const { rows } = res
+      const { rows, total } = res
+      this.total = total
       this.employeeList = rows
+    },
+
+    // 换页获取员工列表数据
+    currentChange(currentPage) {
+      // 改变页数
+      this.queryParams.page = currentPage
+      this.GetEmployee()
     }
   }
 
