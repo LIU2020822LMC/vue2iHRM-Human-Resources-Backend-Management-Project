@@ -24,3 +24,12 @@ export const exportExcelTemplate = () => {
     responseType: 'blob' // 使用blob接受二进制文件流
   })
 }
+
+// 导入员工(上传excel)接口
+export const uploadEmployeeExcel = (data) => {
+  return request({
+    url: '/sys/user/import',
+    method: 'POST',
+    data
+  })
+}

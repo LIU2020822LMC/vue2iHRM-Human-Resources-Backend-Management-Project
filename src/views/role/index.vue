@@ -141,6 +141,8 @@ export default {
       this.$refs.roleForm.validate(async(isOK) => {
         if (isOK) {
           await addNewRole(this.roleForm)
+          // 重新获取角色列表渲染页面
+          this.GetRoleList()
           this.$message.success('新增角色成功')
           this.CancleBtn()
         }
@@ -182,11 +184,11 @@ export default {
     // 删除角色确定按钮方法
     async confirmDel(id) {
       await deleteRole(id)
-      this.$message.success('删除角色成功')
       // 如果删除的是当前页的最后一个的话就网上翻页，即改变当前页
-      if (this.roleList.length === 1) this.pageParams.page--
+      if (this.roleList.length === 1 && this.pageParams.page > 1) this.pageParams.page--
       // 重新获取角色列表渲染页面
       this.GetRoleList()
+      this.$message.success('删除角色成功')
     }
   }
 }

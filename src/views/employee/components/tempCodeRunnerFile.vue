@@ -2,12 +2,12 @@
   <el-dialog width="500px" title="员工导入" :visible="showExcelDialog" @close="$emit('update:showExcelDialog', false)">
     <el-row type="flex" justify="center">
       <div class="upload-excel">
-        <input ref="excel-upload-input" class="excel-upload-input" type="file" accept=".xlsx, .xls" @change="uploadChange">
+        <input ref="excel-upload-input" class="excel-upload-input" type="file" accept=".xlsx, .xls">
         <div class="drop">
           <i class="el-icon-upload" />
           <el-button type="text" @click="ExportExcelTemplate">下载导入模板</el-button>
           <span>将文件拖到此处或
-            <el-button type="text" @click="uploadExcel">点击上传</el-button>
+            <el-button type="text">点击上传</el-button>
           </span>
         </div>
       </div>
@@ -19,7 +19,7 @@
   </el-dialog>
 </template>
 <script>
-import { exportExcelTemplate, uploadEmployeeExcel } from '@/api/employee'
+import { exportExcelTemplate } from '@/api/employee'
 import FileSaver from 'file-saver'
 
 export default {
@@ -33,34 +33,6 @@ export default {
     async ExportExcelTemplate() {
       const res = await exportExcelTemplate()
       FileSaver.saveAs(res, '员工信息表模板.xlsx')
-    },
-
-    // 弹出文件选择器
-    uploadExcel() {
-      this.$refs['excel-upload-input'].click()
-    },
-
-    // 接受上传的数据并且传给接口
-    async uploadChange(event) {
-      const files = event.target.files
-      // 大于0说明有文件要上传
-      if (files.length > 0) {
-        const data = new FormData()
-        // file: file类型
-        data.append('file', files[0])
-        try {
-          await uploadEmployeeExcel(data)
-          debugger
-          // 向父组件传递成功的信息
-          this.$emit('updateSuccess')
-          this.$emit('update:showExcelDialog', false)
-        // eslint-disable-next-line no-empty
-        } catch (error) {
-        } finally {
-          // 无论失败还是成功都要清空文件选择器
-          this.$refs['excel-upload-input'].value = ''
-        }
-      }
     }
   }
 }
