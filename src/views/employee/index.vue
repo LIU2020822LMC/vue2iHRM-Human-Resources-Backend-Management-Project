@@ -29,19 +29,21 @@
         </el-row>
 
         <!-- 表格组件 -->
-        <el-table :data="tableData" style="width: 100%">
-          <el-table-column label="头像" align="center" />
-          <el-table-column label="姓名" align="center" />
-          <el-table-column label="手机号" align="center" sortable width="100px" />
-          <el-table-column label="工号" align="center" sortable />
-          <el-table-column label="聘用形式" align="center" />
-          <el-table-column label="部门" align="center" />
-          <el-table-column label="入聘时间" align="center" sortable width="120px" />
-          <el-table-column label="操作" align="center" width="180px">
+        <el-table :data="employeeList" style="width: 100%">
+          <el-table-column prop="staffPhoto" label="头像" align="center" />
+          <el-table-column prop="username" label="姓名" align="center" />
+          <el-table-column prop="mobile" label="手机号" align="center" sortable width="100px" />
+          <el-table-column prop="workNumber" label="工号" align="center" sortable />
+          <el-table-column prop="formOfEmployment" label="聘用形式" align="center" />
+          <el-table-column prop="departmentName" label="部门" align="center" />
+          <el-table-column prop="timeOfEntry" label="入聘时间" align="center" sortable width="120px" />
+          <el-table-column label="操作" align="center" width="200px">
             <el-button type="text" size="mini">查看</el-button>
             <el-button type="text" size="mini">角色</el-button>
             <!-- slot="reference"：“slot”（插槽）是 Vue 组件的内容分发机制，reference 通常是某个弹窗 / 下拉组件（如 el-popconfirm 确认弹窗）的 “触发源插槽”—— 意味着这个按钮会作为触发弹窗的 “引用元素”（点击按钮会弹出确认框）。 -->
-            <el-button slot="reference" type="text" size="mini">删除</el-button>
+            <el-popconfirm title="确定删除这个员工信息吗？" style="margin-left: 10px;">
+              <el-button slot="reference" type="text" size="mini">删除</el-button>
+            </el-popconfirm>
           </el-table-column>
         </el-table>
 
@@ -56,6 +58,7 @@
 <script>
 import { getDepartment } from '@/api/department.js'
 import { transListToTreeData } from '@/utils/index.js'
+import { getEmployee } from '@/api/employee'
 
 export default {
   name: 'Employee',
@@ -70,7 +73,9 @@ export default {
       // 存储查询参数
       queryParams: {
         departmentId: null
-      }
+      },
+
+      employeeList: []
     }
   },
   created() {
@@ -90,11 +95,20 @@ export default {
         this.$refs.deptTree.setCurrentKey(this.queryParams.departmentId)
       })
       // console.log(this.queryParams.departmentId)
+      this.GetEmployee()
     },
     SelectNode(node) {
       // node参数是树形控件里面的每一个对象数据
       this.queryParams.departmentId = node.id
       // console.log(this.queryParams.departmentId)
+      this.GetEmployee()
+    },
+
+    // 根据对应参数获取员工列表函数
+    async GetEmployee() {
+      const res = await getEmployee(this.queryParams)
+      const { rows } = res
+      this.employeeList = rows
     }
   }
 
