@@ -25,7 +25,7 @@
       </div>
       <div class="right">
         <el-row class="opeate-tools" type="flex" justify="end">
-          <el-button type="primary">添加员工</el-button>
+          <el-button type="primary" @click="$router.push({ name: 'employeeDetail' })">添加员工</el-button>
           <el-button @click="showExcelDialog = true">excel导入</el-button>
           <el-button @click="ExportEmployee">excel导出</el-button>
         </el-row>
