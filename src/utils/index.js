@@ -128,7 +128,10 @@ export function transListToTreeData(list, parentNode) {
     if (item.pid === parentNode) {
       arr.push(item) // 存储节点
       const children = transListToTreeData(list, item.id) // 继续寻找子节点
-      item.children = children // 增加item的children属性
+      if (children.length > 0) {
+        // 子节点不为空才会赋值给当前节点
+        item.children = children // 增加item的children属性
+      }
     }
   })
   return arr // 每层递归结束的返回值
