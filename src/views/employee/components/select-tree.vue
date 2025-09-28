@@ -8,6 +8,7 @@ import { transListToTreeData } from '@/utils/index'
 
 export default {
   props: {
+    // 必须用 value 作为 prop 名，因为这是父子之间双向绑定数据
     value: {
       type: Number,
       default: null
