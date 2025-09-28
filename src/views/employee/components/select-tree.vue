@@ -39,7 +39,7 @@ export default {
     handleChange(list) {
       // console.log(list)
       if (list.length > 0) {
-        // 如果选择了哪一个部门，就像父组件传递list中的最后一个id
+        // 如果选择了哪一个部门，就向父组件传递list中的最后一个id
         this.$emit('input', list[list.length - 1])
       } else {
         // 没有选择的话，就传递空

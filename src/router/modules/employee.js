@@ -13,7 +13,7 @@ export default {
       }
     },
     {
-      path: '/employee/detail',
+      path: '/employee/detail/:id?', // /:id? 动态添加id参数
       name: 'employeeDetail',
       component: () => import('@/views/employee/detail.vue'),
       hidden: true,

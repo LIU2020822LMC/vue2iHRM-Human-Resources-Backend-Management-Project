@@ -54,8 +54,6 @@ export default {
           // 向父组件传递成功的信息
           this.$emit('updateSuccess')
           this.$emit('update:showExcelDialog', false)
-        // eslint-disable-next-line no-empty
-        } catch (error) {
         } finally {
           // 无论失败还是成功都要清空文件选择器
           this.$refs['excel-upload-input'].value = ''

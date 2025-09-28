@@ -78,6 +78,7 @@
           <el-row type="flex">
             <el-col :span="12" style="margin-left:220px">
               <el-button type="primary" @click="saveData">保存更新</el-button>
+              <el-button @click="$router.back()">取消</el-button>
             </el-col>
           </el-row>
         </el-form>
@@ -89,7 +90,7 @@
 
 <script>
 import selectTree from './components/select-tree.vue'
-import { newAddEmployee } from '@/api/employee'
+import { getEmployeeInfo, newAddEmployee } from '@/api/employee'
 
 export default {
   components: {
@@ -108,7 +109,7 @@ export default {
       },
       rules: {
         username: [{ required: true, message: '请输入姓名', trigger: 'blur' }, {
-          min: 1, max: 4, message: '姓名为1-4位'
+          min: 1, max: 10, message: '姓名为1-10位'
         }],
         mobile: [{ required: true, message: '请输入手机号', trigger: 'blur' }, {
           //   pattern 正则表达式
@@ -134,6 +135,14 @@ export default {
 
     }
   },
+
+  created() {
+    // 路由有参数的话就使用获取员工详情信息函数
+    if (this.$route.params.id) {
+      this.GetEmployeeInfo()
+    }
+  },
+
   methods: {
     saveData() {
       this.$refs.userForm.validate(async(isOK) => {
@@ -143,6 +152,12 @@ export default {
           this.$router.push('/employee')
         }
       })
+    },
+
+    // 获取员工详情信息函数
+    async GetEmployeeInfo() {
+      const res = await getEmployeeInfo(this.$route.params.id)
+      this.userInfo = res
     }
   }
 }

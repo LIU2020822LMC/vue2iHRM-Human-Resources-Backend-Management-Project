@@ -38,7 +38,7 @@ export const uploadEmployeeExcel = (data) => {
 export const deleteEmployee = (id) => {
   return request({
     url: `/sys/user/${id}`,
-    method: 'DETELE'
+    method: 'DELETE'
   })
 }
 
@@ -48,5 +48,12 @@ export const newAddEmployee = (data) => {
     url: '/sys/user',
     method: 'POST',
     data
+  })
+}
+
+// 获取员工基本信息接口
+export const getEmployeeInfo = (id) => {
+  return request({
+    url: `/sys/user/${id}`
   })
 }

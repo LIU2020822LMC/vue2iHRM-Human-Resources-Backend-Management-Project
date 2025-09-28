@@ -43,15 +43,28 @@ request.interceptors.response.use((res) => {
 },
 async(err) => {
   // 失败执行promise
-  if (err.response.status >= 400 && err.response.status <= 500) {
-    Message({ type: 'warning', message: '登录超时，请重新登录' })
+  if (err.response.status === 400) {
+    Message({ type: 'error', message: '请求参数错误' })
+    return Promise.reject(err) // 结束语句，不再往下面走
+  } else if (err.response.status === 401) {
+    Message({ type: 'error', message: '登录超时，请重新登录' })
     // 说明token超时了,需要删除缓存的token与vuex相关的用户信息，调用vuex中的user模块中的action中的logout方法
     await store.dispatch('user/logout')
     // 清除完之后跳转登录页
     router.push('/login')
     return Promise.reject(err) // 结束语句，不再往下面走
+  } else if (err.response.status === 403) {
+    Message({ type: 'error', message: '权限不足' })
+    return Promise.reject(err) // 结束语句，不再往下面走
+  } else if (err.response.status === 404) {
+    Message({ type: 'error', message: '接口不存在' })
+    return Promise.reject(err) // 结束语句，不再往下面走
+  } else if (err.response.status === 500) {
+    Message({ type: 'error', message: '服务器内部错误' })
+    return Promise.reject(err) // 结束语句，不再往下面走
+  } else {
+    Message({ type: 'error', message: err.response.data.message })
+    return Promise.reject(err)
   }
-  Message({ type: 'error', message: err.response.data.message })
-  return Promise.reject(err)
 })
 export default request

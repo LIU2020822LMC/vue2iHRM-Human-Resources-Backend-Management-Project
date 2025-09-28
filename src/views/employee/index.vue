@@ -54,7 +54,7 @@
           <el-table-column prop="timeOfEntry" label="入聘时间" align="center" sortable width="120px" />
           <el-table-column label="操作" align="center" width="200px">
             <template v-slot="{row}">
-              <el-button type="text" size="mini">查看</el-button>
+              <el-button type="text" size="mini" @click="$router.push(`/employee/detail/${row.id}`)">查看</el-button>
               <el-button type="text" size="mini">角色</el-button>
               <!-- slot="reference"：“slot”（插槽）是 Vue 组件的内容分发机制，reference 通常是某个弹窗 / 下拉组件（如 el-popconfirm 确认弹窗）的 “触发源插槽”—— 意味着这个按钮会作为触发弹窗的 “引用元素”（点击按钮会弹出确认框）。 -->
               <el-popconfirm title="确定删除这个员工信息吗？" @onConfirm="confirmDel(row.id)">
@@ -199,7 +199,9 @@ export default {
       if (this.employeeList.length === 1 && this.queryParams.page > 1) this.queryParams.page--
       // 重新获取角色列表渲染页面
       this.GetEmployee()
-      this.$message.success('删除员工成功')
+      this.$nextTick(() => {
+        this.$message.success('删除员工成功')
+      })
     }
   }
 
