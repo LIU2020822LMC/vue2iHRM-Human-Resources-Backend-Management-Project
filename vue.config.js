@@ -39,7 +39,6 @@ module.exports = {
     proxy: {
       '/api': {
         target: 'https://heimahr.itheima.net'
-        // changeOrigin: true // 允许跨域（关键配置）
       }
     }
     // 基础模板做的模拟数据 拦截请求

@@ -72,6 +72,7 @@
             <el-col :span="12">
               <el-form-item label="员工头像">
                 <!-- 放置上传图片 -->
+                <imageUpload v-model="userInfo.staffPhoto" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -92,10 +93,11 @@
 <script>
 import selectTree from './components/select-tree.vue'
 import { getEmployeeInfo, newAddEmployee, updateEmployeeInfo } from '@/api/employee'
+import imageUpload from './components/image-upload.vue'
 
 export default {
   components: {
-    selectTree
+    selectTree, imageUpload
   },
   data() {
     return {
@@ -106,7 +108,8 @@ export default {
         formOfEmployment: null, // 聘用形式
         departmentId: null, // 部门id
         timeOfEntry: '', // 入职时间
-        correctionTime: '' // 转正时间
+        correctionTime: '', // 转正时间
+        staffPhoto: '' // 员工头像
       },
       rules: {
         username: [{ required: true, message: '请输入姓名', trigger: 'blur' }, {
@@ -150,9 +153,11 @@ export default {
         if (isOK) {
           // 通过路由是否有动态参数判断是编辑模式还是新增模式
           if (this.$route.params.id) {
+            // 编辑状态
             await updateEmployeeInfo(this.userInfo)
             this.$message.success('修改员工成功')
           } else {
+            // 新增状态
             await newAddEmployee(this.userInfo)
             this.$message.success('新增员工成功')
           }
