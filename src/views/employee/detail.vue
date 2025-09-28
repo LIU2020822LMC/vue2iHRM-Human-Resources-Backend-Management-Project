@@ -24,7 +24,8 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="手机" prop="mobile">
-                <el-input v-model="userInfo.mobile" size="mini" class="inputW" />
+                <!-- !!$route.params.id 两个感叹号将字符串转为布尔值 -->
+                <el-input v-model="userInfo.mobile" :disabled="!!$route.params.id" size="mini" class="inputW" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -90,7 +91,7 @@
 
 <script>
 import selectTree from './components/select-tree.vue'
-import { getEmployeeInfo, newAddEmployee } from '@/api/employee'
+import { getEmployeeInfo, newAddEmployee, updateEmployeeInfo } from '@/api/employee'
 
 export default {
   components: {
@@ -147,8 +148,14 @@ export default {
     saveData() {
       this.$refs.userForm.validate(async(isOK) => {
         if (isOK) {
-          await newAddEmployee(this.userInfo)
-          this.$message.success('新增员工成功')
+          // 通过路由是否有动态参数判断是编辑模式还是新增模式
+          if (this.$route.params.id) {
+            await updateEmployeeInfo(this.userInfo)
+            this.$message.success('修改员工成功')
+          } else {
+            await newAddEmployee(this.userInfo)
+            this.$message.success('新增员工成功')
+          }
           this.$router.push('/employee')
         }
       })
