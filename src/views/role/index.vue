@@ -55,7 +55,7 @@
           <el-pagination
             :page-size="pageParams.pagesize"
             :current-page="pageParams.page"
-            layout="prev, pager, next"
+            layout="total,prev, pager, next"
             :total="pageParams.total"
             @current-change="CurrentPageChange"
           />
@@ -94,7 +94,7 @@ export default {
       roleList: [],
       pageParams: {
         page: 1, // 当前页
-        pagesize: 5, // 每页显示的数据数量
+        pagesize: 10, // 每页显示的数据数量
         total: 0 // 总数据量
       },
       dialogVisible: false,

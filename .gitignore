@@ -14,3 +14,7 @@ tests/**/coverage/
 *.ntvs*
 *.njsproj
 *.sln
+*.env
+.env*
+.env.local
+.env.*.local
