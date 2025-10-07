@@ -69,8 +69,8 @@
           <el-pagination
             layout="total,prev, pager, next"
             :total="total"
-            :current-page="page"
-            :page-size="pagesize"
+            :current-page="queryParams.page"
+            :page-size="queryParams.pagesize"
             @current-change="currentChange"
           />
         </el-row>
