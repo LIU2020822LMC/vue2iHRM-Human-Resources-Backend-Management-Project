@@ -18,3 +18,4 @@ tests/**/coverage/
 .env*
 .env.local
 .env.*.local
+.env.development
