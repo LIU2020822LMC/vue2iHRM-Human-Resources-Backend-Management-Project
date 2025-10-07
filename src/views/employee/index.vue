@@ -55,7 +55,7 @@
           <el-table-column label="操作" align="center" width="200px">
             <template v-slot="{row}">
               <el-button type="text" size="mini" @click="$router.push(`/employee/detail/${row.id}`)">查看</el-button>
-              <el-button type="text" size="mini">角色</el-button>
+              <el-button type="text" size="mini" @click="BtnRole">角色</el-button>
               <!-- slot="reference"：“slot”（插槽）是 Vue 组件的内容分发机制，reference 通常是某个弹窗 / 下拉组件（如 el-popconfirm 确认弹窗）的 “触发源插槽”—— 意味着这个按钮会作为触发弹窗的 “引用元素”（点击按钮会弹出确认框）。 -->
               <el-popconfirm title="确定删除这个员工信息吗？" @onConfirm="confirmDel(row.id)">
                 <el-button slot="reference" type="text" style="margin-left: 10px;">删除</el-button>
@@ -79,12 +79,20 @@
 
     <!-- 放置导入组件 -->
     <importExcel :show-excel-dialog.sync="showExcelDialog" @updateSuccess="GetEmployee" />
+
+    <!-- 分配角色弹窗 -->
+    <el-dialog title="分配角色" :visible.sync="dialogRoleVisible">
+      <el-checkbox-group v-model="RoleIdList">
+        <!-- 放置n个的checkbox 要执行checkbox的存储值 -->
+        <el-checkbox v-for="item in RoleList" :key="item.id" :label="item.id">{{ item.name }}</el-checkbox>
+      </el-checkbox-group>
+    </el-dialog>
   </div>
 </template>
 <script>
 import { getDepartment } from '@/api/department.js'
 import { transListToTreeData } from '@/utils/index.js'
-import { getEmployee, exportEmployee, deleteEmployee } from '@/api/employee'
+import { getEmployee, exportEmployee, deleteEmployee, getRoleList } from '@/api/employee'
 import FileSaver from 'file-saver'
 import importExcel from './components/import-excel.vue'
 
@@ -97,7 +105,8 @@ export default {
     return {
       // 导入弹窗显示
       showExcelDialog: false,
-
+      // 分配角色弹窗显示
+      dialogRoleVisible: false,
       departmentList: [],
       defaultProps: {
         children: 'children',
@@ -114,11 +123,15 @@ export default {
 
       employeeList: [], // 员工列表数据
 
-      total: 0 // 总页数
+      total: 0, // 总页数
+
+      RoleList: [], // 已启用的角色列表
+      RoleIdList: [] // 选中的角色id列表
     }
   },
   created() {
     this.GetDepartment()
+    this.GetRoleList()
   },
   methods: {
     // 获取部门列表数据
@@ -135,6 +148,12 @@ export default {
       })
       // console.log(this.queryParams.departmentId)
       this.GetEmployee()
+    },
+
+    // 获取已启用的角色列表函数
+    async GetRoleList() {
+      const res = await getRoleList()
+      this.RoleList = res
     },
 
     // 选择哪个部门获取的员工列表数据函数
@@ -202,6 +221,11 @@ export default {
       this.$nextTick(() => {
         this.$message.success('删除员工成功')
       })
+    },
+
+    // 分配角色按钮方法
+    BtnRole() {
+      this.dialogRoleVisible = true
     }
   }
 

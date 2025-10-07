@@ -66,3 +66,10 @@ export const updateEmployeeInfo = (data) => {
     data
   })
 }
+
+// 获取已启用的角色列表接口
+export const getRoleList = () => {
+  return request({
+    url: '/sys/role/list/enabled'
+  })
+}
