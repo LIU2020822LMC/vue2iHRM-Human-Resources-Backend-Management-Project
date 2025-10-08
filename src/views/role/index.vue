@@ -39,7 +39,7 @@
               <el-button size="mini" @click="row.isEdit = false">取消</el-button>
             </template>
             <template v-else>
-              <el-button type="text" @click="AssignPermission">分配权限</el-button>
+              <el-button type="text" @click="AssignPermission(row.id)">分配权限</el-button>
               <el-button type="text" @click="EditRole(row)">编辑</el-button>
               <el-popconfirm title="确定删除这个角色吗？" @onConfirm="confirmDel(row.id)">
                 <el-button slot="reference" type="text" style="margin-left: 10px;">删除</el-button>
@@ -83,15 +83,23 @@
       </el-dialog>
 
       <!-- 放置分配权限弹窗 -->
-      <el-dialog :visible.sync="showPermissionDialog" title="分配权限">
+      <el-dialog :visible.sync="showPermissionDialog" title="分配权限" @close="resetPermissionTree">
         <!-- 放置树形权限数据 -->
-        <el-tree :data="permissionList" :props="{label:'name'}" show-checkbox default-expand-all />
+        <el-tree
+          ref="permissionTree"
+          :data="permissionList"
+          :props="{ label: 'name', children: 'children' }"
+          show-checkbox
+          default-expand-all
+          node-key="id"
+          :default-checked-keys="PermissionIds"
+        />
       </el-dialog>
     </div>
   </div>
 </template>
 <script>
-import { getRoleList, addNewRole, updateRole, deleteRole } from '@/api/role'
+import { getRoleList, addNewRole, updateRole, deleteRole, getRoleDetail } from '@/api/role'
 import { getPermissionList } from '@/api/permission'
 import { transListToTreeData } from '@/utils/index'
 
@@ -118,7 +126,11 @@ export default {
       },
 
       showPermissionDialog: false,
-      permissionList: [] // 权限列表数据
+      permissionList: [], // 权限列表数据
+
+      CurrentRoleId: null, // 当前分配权限的角色id
+
+      PermissionIds: [] // 当前角色拥有的权限id列表
     }
   },
   created() {
@@ -210,8 +222,21 @@ export default {
       this.$message.success('删除角色成功')
     },
 
+    // 重置权限树的勾选状态和数据
+    resetPermissionTree() {
+      this.PermissionIds = [] // 清空勾选数据（保证下次打开时初始值为空）
+      // 清空树组件的视图勾选（?. 避免组件未加载时报错，简单又安全）
+      // setCheckedKeys 是 Element UI 中 el-tree 组件自带的实例方法（不是属性），
+      // 作用是动态设置树形控件中被勾选的节点，可以覆盖当前的勾选状态，包括清空勾选。
+      this.$refs.permissionTree?.setCheckedKeys([])
+      this.CurrentRoleId = null // 可选：重置当前角色ID，避免残留
+    },
+
     // 分配权限按钮方法
-    AssignPermission() {
+    async AssignPermission(id) {
+      this.CurrentRoleId = id
+      const { permIds } = await getRoleDetail(id)
+      this.PermissionIds = permIds
       this.showPermissionDialog = true
     }
   }

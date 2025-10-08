@@ -33,3 +33,10 @@ export const deleteRole = (id) => {
     method: 'DELETE'
   })
 }
+
+// 获取角色详情信息
+export const getRoleDetail = (id) => {
+  return request({
+    url: `/sys/role/${id}`
+  })
+}
