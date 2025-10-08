@@ -9,8 +9,7 @@
         <el-table-column prop="name" label="名称" align="center" />
         <el-table-column prop="code" label="标识" align="center" />
         <el-table-column prop="description" label="描述" align="center" />
-        <el-table-column label="操作" align="center" />
-        <el-table-column>
+        <el-table-column label="操作" align="center">
           <template v-slot="{ row }">
             <!-- @click="AddPermission(row.id, 2)这里添加row.id表明它是从属于哪个权限下面的二级权限 -->
             <div class="btn-group">

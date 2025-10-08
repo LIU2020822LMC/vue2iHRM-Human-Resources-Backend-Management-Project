@@ -64,7 +64,7 @@
 
       <!-- 放置新增角色弹窗 -->
       <!-- 通过 .sync 修饰符，当子组件内部改变 visible 状态时（比如点击关闭按钮），会自动同步更新父组件的 dialogVisible 变量 -->
-      <el-dialog :visible.sync="dialogVisible" title="新增角色" width="500px" @close="CancleBtn">
+      <el-dialog :visible.sync="dialogVisible" :title="新增角色" width="500px" @close="CancleBtn">
         <el-form ref="roleForm" label-width="120px" :model="roleForm" :rules="rules">
           <el-form-item label="角色名称" prop="name">
             <el-input v-model="roleForm.name" style="width: 300px;" />
@@ -83,7 +83,7 @@
       </el-dialog>
 
       <!-- 放置分配权限弹窗 -->
-      <el-dialog :visible.sync="showPermissionDialog" title="分配权限" @close="resetPermissionTree">
+      <el-dialog :visible.sync="showPermissionDialog" :title="`分配权限--${roleName}`" @close="resetPermissionTree">
         <!-- 放置树形权限数据 -->
         <el-tree
           ref="permissionTree"
@@ -93,13 +93,26 @@
           default-expand-all
           node-key="id"
           :default-checked-keys="PermissionIds"
+          check-strictly
         />
+        <!-- 放置确定与取消按钮 -->
+        <el-row slot="footer" type="flex" justify="center">
+          <el-column>
+            <el-button type="primary" @click="OkPermissionBtn">确定</el-button>
+            <!-- el-dialog 的 @close 事件是 “弹窗关闭的最终回调”，无论通过哪种方式关闭弹窗
+            （包括：点击取消按钮、点击弹窗右上角关闭图标、点击遮罩层关闭等），都会触发这个事件。因此，
+            即使取消按钮没有显式调用 resetPermissionTree，只要它导致了弹窗关闭，就会间接触发 resetPermissionTree，
+            从而清空上一个角色的勾选状态。这也是 Element UI 组件设计的便捷性：
+            通过 @close 统一处理弹窗关闭后的清理逻辑，无需为每个关闭入口（取消按钮、关闭图标等）单独写重复代码。 -->
+            <el-button @click="showPermissionDialog=false">取消</el-button>
+          </el-column>
+        </el-row>
       </el-dialog>
     </div>
   </div>
 </template>
 <script>
-import { getRoleList, addNewRole, updateRole, deleteRole, getRoleDetail } from '@/api/role'
+import { getRoleList, addNewRole, updateRole, deleteRole, getRoleDetail, assignRolePermission } from '@/api/role'
 import { getPermissionList } from '@/api/permission'
 import { transListToTreeData } from '@/utils/index'
 
@@ -108,6 +121,8 @@ export default {
   data() {
     return {
       roleList: [],
+      // 分配权限时获取的角色名
+      roleName: '',
       pageParams: {
         page: 1, // 当前页
         pagesize: 10, // 每页显示的数据数量
@@ -235,9 +250,17 @@ export default {
     // 分配权限按钮方法
     async AssignPermission(id) {
       this.CurrentRoleId = id
-      const { permIds } = await getRoleDetail(id)
+      const { permIds, name } = await getRoleDetail(id)
+      this.roleName = name
       this.PermissionIds = permIds
       this.showPermissionDialog = true
+    },
+
+    // 分配权限弹窗的确定按钮方法
+    async OkPermissionBtn() {
+      await assignRolePermission({ id: this.CurrentRoleId, permIds: this.$refs.permissionTree.getCheckedKeys() })
+      this.$message.success('分配权限成功')
+      this.showPermissionDialog = false
     }
   }
 }

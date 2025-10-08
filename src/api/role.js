@@ -40,3 +40,12 @@ export const getRoleDetail = (id) => {
     url: `/sys/role/${id}`
   })
 }
+
+// 分配角色权限接口
+export const assignRolePermission = (data) => {
+  return request({
+    url: '/sys/role/assignPrem',
+    method: 'PUT',
+    data
+  })
+}
