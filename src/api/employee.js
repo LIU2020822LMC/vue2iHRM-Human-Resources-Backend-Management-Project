@@ -73,3 +73,12 @@ export const getRoleList = () => {
     url: '/sys/role/list/enabled'
   })
 }
+
+// 给员工分配角色接口
+export const assignRole = (data) => {
+  return request({
+    url: '/sys/user/assignRoles',
+    method: 'PUT',
+    data
+  })
+}

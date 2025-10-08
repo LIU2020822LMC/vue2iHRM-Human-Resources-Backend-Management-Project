@@ -55,7 +55,7 @@
           <el-table-column label="操作" align="center" width="200px">
             <template v-slot="{row}">
               <el-button type="text" size="mini" @click="$router.push(`/employee/detail/${row.id}`)">查看</el-button>
-              <el-button type="text" size="mini" @click="BtnRole">角色</el-button>
+              <el-button type="text" size="mini" @click="BtnRole(row.id)">角色</el-button>
               <!-- slot="reference"：“slot”（插槽）是 Vue 组件的内容分发机制，reference 通常是某个弹窗 / 下拉组件（如 el-popconfirm 确认弹窗）的 “触发源插槽”—— 意味着这个按钮会作为触发弹窗的 “引用元素”（点击按钮会弹出确认框）。 -->
               <el-popconfirm title="确定删除这个员工信息吗？" @onConfirm="confirmDel(row.id)">
                 <el-button slot="reference" type="text" style="margin-left: 10px;">删除</el-button>
@@ -77,7 +77,7 @@
       </div>
     </div>
 
-    <!-- 放置导入组件 -->
+    <!-- 放置excel导入组件 -->
     <importExcel :show-excel-dialog.sync="showExcelDialog" @updateSuccess="GetEmployee" />
 
     <!-- 分配角色弹窗 -->
@@ -86,13 +86,21 @@
         <!-- 放置n个的checkbox 要执行checkbox的存储值 -->
         <el-checkbox v-for="item in RoleList" :key="item.id" :label="item.id">{{ item.name }}</el-checkbox>
       </el-checkbox-group>
+
+      <!-- 放置角色的确定与取消按钮 -->
+      <el-row slot="footer" type="flex" justify="center">
+        <el-column>
+          <el-button type="primary" @click="OKbtn">确定</el-button>
+          <el-button @click="dialogRoleVisible=false">取消</el-button>
+        </el-column>
+      </el-row>
     </el-dialog>
   </div>
 </template>
 <script>
 import { getDepartment } from '@/api/department.js'
 import { transListToTreeData } from '@/utils/index.js'
-import { getEmployee, exportEmployee, deleteEmployee, getRoleList } from '@/api/employee'
+import { getEmployee, exportEmployee, deleteEmployee, getRoleList, getEmployeeInfo, assignRole } from '@/api/employee'
 import FileSaver from 'file-saver'
 import importExcel from './components/import-excel.vue'
 
@@ -126,7 +134,13 @@ export default {
       total: 0, // 总页数
 
       RoleList: [], // 已启用的角色列表
-      RoleIdList: [] // 选中的角色id列表
+      RoleIdList: [], // 选中的角色id列表
+
+      // 当前选中的员工id
+      currentEmployeeId: null,
+
+      isIndeterminate: true, // 全选状态
+      checkAll: false // 全选按钮
     }
   },
   created() {
@@ -224,9 +238,25 @@ export default {
     },
 
     // 分配角色按钮方法
-    BtnRole() {
+    async BtnRole(id) {
+      // 获取当前员工已分配的角色
+      const { roleIds } = await getEmployeeInfo(id)
+      // 获取当前选中员工的id
+      this.currentEmployeeId = id
+      this.RoleIdList = roleIds
       this.dialogRoleVisible = true
+    },
+
+    // 分配角色弹窗的确定按钮方法
+    async OKbtn() {
+      await assignRole({
+        id: this.currentEmployeeId,
+        roleIds: this.RoleIdList
+      })
+      this.dialogRoleVisible = false
+      this.$message.success('分配用户角色成功')
     }
+
   }
 
 }
