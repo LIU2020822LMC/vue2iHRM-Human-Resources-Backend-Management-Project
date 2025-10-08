@@ -39,7 +39,7 @@
               <el-button size="mini" @click="row.isEdit = false">取消</el-button>
             </template>
             <template v-else>
-              <el-button type="text">分配权限</el-button>
+              <el-button type="text" @click="AssignPermission">分配权限</el-button>
               <el-button type="text" @click="EditRole(row)">编辑</el-button>
               <el-popconfirm title="确定删除这个角色吗？" @onConfirm="confirmDel(row.id)">
                 <el-button slot="reference" type="text" style="margin-left: 10px;">删除</el-button>
@@ -62,7 +62,7 @@
         </el-column>
       </el-row>
 
-      <!-- 放置弹窗 -->
+      <!-- 放置新增角色弹窗 -->
       <!-- 通过 .sync 修饰符，当子组件内部改变 visible 状态时（比如点击关闭按钮），会自动同步更新父组件的 dialogVisible 变量 -->
       <el-dialog :visible.sync="dialogVisible" title="新增角色" width="500px" @close="CancleBtn">
         <el-form ref="roleForm" label-width="120px" :model="roleForm" :rules="rules">
@@ -81,11 +81,19 @@
           </el-form-item>
         </el-form>
       </el-dialog>
+
+      <!-- 放置分配权限弹窗 -->
+      <el-dialog :visible.sync="showPermissionDialog" title="分配权限">
+        <!-- 放置树形权限数据 -->
+        <el-tree :data="permissionList" :props="{label:'name'}" show-checkbox default-expand-all />
+      </el-dialog>
     </div>
   </div>
 </template>
 <script>
 import { getRoleList, addNewRole, updateRole, deleteRole } from '@/api/role'
+import { getPermissionList } from '@/api/permission'
+import { transListToTreeData } from '@/utils/index'
 
 export default {
   name: 'Role',
@@ -107,11 +115,15 @@ export default {
         name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }],
         state: [],
         description: [{ required: true, message: '请输入角色描述', trigger: 'blur' }]
-      }
+      },
+
+      showPermissionDialog: false,
+      permissionList: [] // 权限列表数据
     }
   },
   created() {
     this.GetRoleList()
+    this.GetPermissionList()
   },
   methods: {
     // 获取角色列表函数
@@ -130,6 +142,13 @@ export default {
       })
       // console.log(this.roleList)
     },
+
+    // 获取分配权限的权限列表
+    async GetPermissionList() {
+      const res = transListToTreeData(await getPermissionList(), 0)
+      this.permissionList = res
+    },
+
     // 当前页的请求函数
     CurrentPageChange(currentPage) {
       this.pageParams.page = currentPage
@@ -189,6 +208,11 @@ export default {
       // 重新获取角色列表渲染页面
       this.GetRoleList()
       this.$message.success('删除角色成功')
+    },
+
+    // 分配权限按钮方法
+    AssignPermission() {
+      this.showPermissionDialog = true
     }
   }
 }
