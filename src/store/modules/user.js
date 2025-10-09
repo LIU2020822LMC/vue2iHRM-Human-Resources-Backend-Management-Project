@@ -1,9 +1,11 @@
 import { getToken, setToken, removeToken } from '../../utils/auth.js'
 import { login, getUserInfo } from '@/api/user.js'
+import { constantRoutes } from '@/router'
 
 const state = {
   token: getToken(), // 从缓存中读取初始值
-  UserInfo: {} // 存储用户基本信息
+  UserInfo: {}, // 存储用户基本信息
+  routes: constantRoutes // 存储路由
 }
 
 const mutations = {
@@ -23,6 +25,11 @@ const mutations = {
     state.token = null
     // 清除缓存的token
     removeToken()
+  },
+
+  // 改变路由的方法
+  setRoutes(state, newRoutes) {
+    state.routes = [...constantRoutes, ...newRoutes]
   }
 }
 

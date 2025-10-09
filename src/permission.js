@@ -23,11 +23,13 @@ router.beforeEach(async(to, from, next) => {
       if (!store.getters.userId) {
         // 如果检测出没有userId的话那就请求获取用户信息接口，将信息获取到并存到vuex中
         const { roles } = await store.dispatch('user/getUserInfo')
-        console.log(roles.menus)
+        // console.log(roles.menus)
         // 筛选后的路由
         const filterRouters = asyncRouters.filter((item) => {
           return roles.menus.includes(item.name)
         }) // 筛选后的路由
+        // 将筛选后的路由与原本的静态路由存储在vuex中
+        store.commit('user/setRoutes', filterRouters)
         // 给静态路由添加筛选后的路由
         router.addRoutes([
           ...filterRouters,
