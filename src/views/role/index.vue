@@ -244,7 +244,7 @@ export default {
       // setCheckedKeys 是 Element UI 中 el-tree 组件自带的实例方法（不是属性），
       // 作用是动态设置树形控件中被勾选的节点，可以覆盖当前的勾选状态，包括清空勾选。
       this.$refs.permissionTree?.setCheckedKeys([])
-      this.CurrentRoleId = null // 可选：重置当前角色ID，避免残留
+      this.CurrentRoleId = null // 重置当前角色ID，避免残留
     },
 
     // 分配权限按钮方法
