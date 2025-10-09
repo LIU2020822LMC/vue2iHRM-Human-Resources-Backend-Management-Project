@@ -38,6 +38,8 @@ import Layout from '@/layout'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
+
+// 静态路由
 export const constantRoutes = [
   // 登录路由
   {
@@ -69,7 +71,12 @@ export const constantRoutes = [
       }
     ]
   },
+  // 如果访问的路径不是我们所规定的话，那就去访问404页面
+  { path: '*', redirect: '/404', hidden: true }
+]
 
+// 动态路由
+export const asyncRouters = [
   // 组织架构路由
   departmentRouter,
 
@@ -92,10 +99,7 @@ export const constantRoutes = [
   salaryRouter,
 
   // 社保管理路由
-  socialRouter,
-
-  // 如果访问的路径不是我们所规定的话，那就去访问404页面
-  { path: '*', redirect: '/404', hidden: true }
+  socialRouter
 ]
 
 const createRouter = () =>
@@ -103,7 +107,7 @@ const createRouter = () =>
     // 自动将新页面的滚动位置重置到顶部（y 轴坐标为 0 的位置）
     // 让用户每次进入新页面都从顶部开始浏览
     scrollBehavior: () => ({ y: 0 }),
-    routes: constantRoutes
+    routes: constantRoutes // 默认引入静态路由
   })
 
 const router = createRouter()
