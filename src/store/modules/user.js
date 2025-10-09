@@ -1,6 +1,6 @@
 import { getToken, setToken, removeToken } from '../../utils/auth.js'
 import { login, getUserInfo } from '@/api/user.js'
-import { constantRoutes } from '@/router'
+import { constantRoutes, resetRouter } from '@/router'
 
 const state = {
   token: getToken(), // 从缓存中读取初始值
@@ -53,6 +53,7 @@ const actions = {
   logout(context) {
     context.commit('removeToken')
     context.commit('setUserInfo', {}) // 直接设置用户对象为空
+    resetRouter() // 重置路由方法
   }
 }
 
