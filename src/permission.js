@@ -28,10 +28,17 @@ router.beforeEach(async(to, from, next) => {
         const filterRouters = asyncRouters.filter((item) => {
           return roles.menus.includes(item.name)
         }) // 筛选后的路由
-        console.log('筛选后的路由：', filterRouters)
+        // 给静态路由添加筛选后的路由
+        router.addRoutes([
+          ...filterRouters,
+          // 如果访问的路径不是我们所规定的话，那就去访问404页面
+          { path: '*', redirect: '/404', hidden: true }
+        ])
+        // router添加动态路由之后，需要转发一下
+        next(to.path) // 目的是让路由拥有信息 router的已知缺陷
+      } else {
+        next() // 直接放行
       }
-
-      next() // 直接放行
     }
   } else {
     if (whileList.includes(to.path)) {

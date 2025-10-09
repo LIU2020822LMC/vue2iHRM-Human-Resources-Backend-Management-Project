@@ -70,9 +70,8 @@ export const constantRoutes = [
         meta: { title: '首页', icon: 'dashboard' }
       }
     ]
-  },
-  // 如果访问的路径不是我们所规定的话，那就去访问404页面
-  { path: '*', redirect: '/404', hidden: true }
+  }
+
 ]
 
 // 动态路由
