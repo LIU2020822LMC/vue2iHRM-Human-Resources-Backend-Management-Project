@@ -33,12 +33,13 @@ const actions = {
     // 调用登录接口
     const token = await login(data)
     context.commit('setToken', token)
-    console.log(state.token)
+    // console.log(state.token)
   },
   // 获取用户基本资料信息
   async getUserInfo(context) {
     const res = await getUserInfo()
     context.commit('setUserInfo', res)
+    return res // 返回数据
   },
 
   // 清除token与vuex中用户信息的方法

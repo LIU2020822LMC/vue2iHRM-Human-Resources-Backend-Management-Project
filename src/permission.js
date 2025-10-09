@@ -3,6 +3,7 @@ import router from '@/router'
 import nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
 import store from './store/index'
+import { asyncRouters } from '@/router'
 
 // 建立白名单存放路由
 const whileList = ['/login', '/404']
@@ -21,7 +22,13 @@ router.beforeEach(async(to, from, next) => {
       // 判断是否获取过资料
       if (!store.getters.userId) {
         // 如果检测出没有userId的话那就请求获取用户信息接口，将信息获取到并存到vuex中
-        await store.dispatch('user/getUserInfo')
+        const { roles } = await store.dispatch('user/getUserInfo')
+        console.log(roles.menus)
+        // 筛选后的路由
+        const filterRouters = asyncRouters.filter((item) => {
+          return roles.menus.includes(item.name)
+        }) // 筛选后的路由
+        console.log('筛选后的路由：', filterRouters)
       }
 
       next() // 直接放行
