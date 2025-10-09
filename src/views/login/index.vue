@@ -98,7 +98,7 @@ export default {
 
   .logo {
     flex: 3;
-    background: rgba(38, 72, 176) url(../../assets/common/login_back.png) no-repeat center / cover;
+    background: rgba(38, 72, 176) url(../../assets/common/login_back2.png) no-repeat center / cover;
     border-top-right-radius: 60px;
     display: flex;
     flex-direction: column;
