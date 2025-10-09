@@ -95,7 +95,7 @@ export default {
         ],
         code: [
           { required: true, message: '请输入权限标识', trigger: 'blur' },
-          { min: 2, max: 5, message: '长度在 2 到 5 个字符', trigger: 'blur' },
+          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' },
           // 判断是否标识重复
           {
             trigger: 'blur',

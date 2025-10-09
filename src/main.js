@@ -32,6 +32,22 @@ if (process.env.NODE_ENV === 'production') {
 // Vue.use(ElementUI)
 Vue.use(ElementUI)
 
+// 自定义指令
+Vue.directive('Permission', {
+  inserted(el, binding) {
+    // el是当前指令作用的dom元素的对象
+    // binding是v-Permission="表达式" 表达式的信息
+    const points = store.state.user.UserInfo?.roles?.points || []
+    // 拿到了points
+    // points中是否有add-employee
+    // binding.value v-Permission="表达式"中的表达式的值
+    if (!points.includes(binding.value)) {
+      // 删除所在的元素
+      el.remove()
+    }
+  }
+})
+
 Vue.config.productionTip = false
 
 new Vue({
