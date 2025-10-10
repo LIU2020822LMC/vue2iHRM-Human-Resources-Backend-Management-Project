@@ -105,6 +105,7 @@ const createRouter = () =>
   new Router({
     // 自动将新页面的滚动位置重置到顶部（y 轴坐标为 0 的位置）
     // 让用户每次进入新页面都从顶部开始浏览
+    mode: 'history',
     scrollBehavior: () => ({ y: 0 }),
     routes: constantRoutes // 默认引入静态路由
   })
