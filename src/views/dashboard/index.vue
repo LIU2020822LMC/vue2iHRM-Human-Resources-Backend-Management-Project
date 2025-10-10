@@ -101,6 +101,7 @@
             </div>
             <div class="chart">
               <!-- 图表 -->
+              <div ref="socialInsuranceCharts" style="width: 100%;height: 100%;" />
             </div>
           </div>
         </div>
@@ -130,6 +131,7 @@
             </div>
             <div class="chart">
               <!-- 图表 -->
+              <div ref="providentFundCharts" style="width: 100%;height: 100%;" />
             </div>
           </div>
         </div>
@@ -192,6 +194,7 @@
 import CountTo from 'vue-count-to'
 import { mapGetters } from 'vuex'
 import { getHomeData, getHomeNotic } from '@/api/home'
+import * as echarts from 'echarts' // 引入所有的echarts
 
 export default {
   components: {
@@ -211,9 +214,65 @@ export default {
       'departmentName'
     ])
   },
+  watch: {
+    HomeData() {
+      this.socialInsuranceCharts.setOption(
+        {
+          xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: this.HomeData.socialInsurance?.xAxis
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [
+            {
+              data: this.HomeData.socialInsurance?.yAxis,
+              type: 'line',
+              areaStyle: {
+                color: '#f9ed69'
+              },
+              lineStyle: {
+                color: '#f9ed69'
+              }
+            }
+          ]
+        }
+      )
+      this.providentFundCharts.setOption(
+        {
+          xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: this.HomeData.providentFund?.xAxis
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [
+            {
+              data: this.HomeData.providentFund?.yAxis,
+              type: 'line',
+              areaStyle: {
+                color: '#f9ed69'
+              },
+              lineStyle: {
+                color: '#f9ed69'
+              }
+            }
+          ]
+        }
+      )
+    }
+  },
   created() {
     this.GetHomeData()
     this.GetHomeNotice()
+  },
+  mounted() {
+    this.providentFundCharts = echarts.init(this.$refs.providentFundCharts)
+    this.socialInsuranceCharts = echarts.init(this.$refs.socialInsuranceCharts)
   },
   methods: {
     // 首页数据获取
