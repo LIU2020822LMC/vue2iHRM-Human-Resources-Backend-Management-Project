@@ -39,6 +39,4 @@ pnpm run dev
 pnpm run build:prod
 ```
 
-### 许可证
 
-MIT © LIU2020822LMC
