@@ -2,7 +2,7 @@
 
 #### 基于 Vue 2.7.0 和 Element UI 构建，专注于提供简洁高效的后台管理系统基础架构，适合快速开发各类企业级后台应用✨
 
-#### 本项目是黑马教学项目，教程视频地址->[黑马程序员前端Vue项目《iHRM人力资源后台管理》全套教程，从vue基础模板开发到整体开发、nginx部署上线](https://www.bilibili.com/video/BV12d4y1q7tg/?spm_id_from=333.1387.favlist.content.click&vd_source=19e31be4259510389057f079c0242e17)
+#### 本项目是黑马教学项目，教程视频地址->[黑马程序员前端Vue项目《iHRM人力资源后台管理》全套教程，从vue基础模板开发到整体开发、nginx部署上线](https://www.bilibili.com/video/BV12d4y1q7tg/?spm_id_from=333.1387.favlist.content.click&vd_source=19e31be4259510389057f079c0242e17)  接口文档地址：[传智教育-人资V8.0](https://s.apifox.cn/e2644216-aad4-4529-a630-78f0631ab076/api-49562537)
 
 ### 安装与使用
 
